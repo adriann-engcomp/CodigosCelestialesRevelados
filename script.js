@@ -117,7 +117,48 @@ function extrairIdDoYoutube(valor) {
     return achou ? achou[1] : "";
 }
 
+/* Coloca a miniatura do vídeo como fundo da caixa, buscando a imagem
+   direto do YouTube. Só a foto é carregada agora — o vídeo em si continua
+   entrando apenas no clique, para a página não ficar pesada. */
+
+function mostrarMiniatura(caixa, id) {
+    const endereco = (nome) => "https://img.youtube.com/vi/" + id + "/" + nome + ".jpg";
+
+    const capa = document.createElement("img");
+    capa.className = "video-capa";
+    capa.alt = "";
+
+    const usarPadrao = () => {
+        if (capa.dataset.trocou) return false;
+        capa.dataset.trocou = "1";
+        capa.src = endereco("hqdefault");
+        return true;
+    };
+
+    capa.addEventListener("load", () => {
+        /* Quando o vídeo não tem miniatura em alta, o YouTube não dá erro:
+           devolve uma imagem cinza de 120x90 como se estivesse tudo certo.
+           Por isso a troca é decidida pelo tamanho, e não pelo erro. */
+        if (capa.naturalWidth <= 120) usarPadrao();
+    });
+
+    capa.addEventListener("error", () => {
+        if (!usarPadrao()) {
+            capa.remove();
+            caixa.classList.remove("com-capa");
+        }
+    });
+
+    capa.src = endereco("maxresdefault");
+
+    caixa.classList.add("com-capa");
+    caixa.insertBefore(capa, caixa.firstChild);
+}
+
 document.querySelectorAll(".video").forEach((caixa) => {
+    const idDaCaixa = extrairIdDoYoutube(caixa.dataset.video);
+    if (idDaCaixa) mostrarMiniatura(caixa, idDaCaixa);
+
     caixa.querySelector(".video-play").addEventListener("click", () => {
         const id = extrairIdDoYoutube(caixa.dataset.video);
 
