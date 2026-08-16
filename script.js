@@ -366,12 +366,7 @@ if (leitor && window.pdfjsLib) {
             canvas.style.width = vista.width + "px";
             canvas.style.height = vista.height + "px";
 
-            const numeracao = document.createElement("span");
-            numeracao.className = "leitor-folha-numero";
-            numeracao.textContent = numero;
-
             caixa.appendChild(canvas);
-            caixa.appendChild(numeracao);
             palco.appendChild(caixa);
 
             folhas.push({ pagina, canvas, caixa, escala, desenhada: false });

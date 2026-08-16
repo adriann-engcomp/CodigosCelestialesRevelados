@@ -806,18 +806,6 @@ a {
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
 }
 
-/* número discreto no canto de cada folha */
-.leitor-folha-numero {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
-    padding: 2px 8px;
-    border-radius: 2px;
-    font-size: 0.72rem;
-    color: var(--texto-fraco);
-    background: rgba(10, 14, 33, 0.75);
-}
-
 .folha-falhou .leitor-folha {
     opacity: 0.25;
 }
