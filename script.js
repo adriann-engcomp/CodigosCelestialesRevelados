@@ -93,14 +93,36 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") fecharLightbox();
 });
 
-/* ---------- 5. Vídeos do YouTube (só carregam ao clicar) ---------- */
+/* ---------- 5. Vídeos do YouTube (só carregam ao clicar) ----------
+
+   No index.html, o data-video aceita tanto o código do vídeo quanto o
+   link inteiro, em qualquer um destes formatos:
+
+       20jwGpTQce4
+       https://youtu.be/20jwGpTQce4
+       https://www.youtube.com/watch?v=20jwGpTQce4
+       https://www.youtube.com/embed/20jwGpTQce4
+       https://www.youtube.com/shorts/20jwGpTQce4                        */
+
+function extrairIdDoYoutube(valor) {
+    if (!valor) return "";
+
+    valor = valor.trim();
+
+    // já é o código puro: 11 caracteres, sem barra nem ponto
+    if (/^[\w-]{11}$/.test(valor)) return valor;
+
+    // senão, procura o código dentro do link
+    const achou = valor.match(/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/|\/live\/)([\w-]{11})/);
+    return achou ? achou[1] : "";
+}
 
 document.querySelectorAll(".video").forEach((caixa) => {
     caixa.querySelector(".video-play").addEventListener("click", () => {
-        const id = caixa.dataset.video;
+        const id = extrairIdDoYoutube(caixa.dataset.video);
 
-        if (!id || id === "COLE_O_ID_AQUI") {
-            alert("Este vídeo ainda não foi configurado.\n\nAbra o arquivo index.html e troque COLE_O_ID_AQUI pelo código do vídeo do YouTube.");
+        if (!id) {
+            alert("Este vídeo ainda não foi configurado.\n\nAbra o index.html e coloque no data-video o link do vídeo do YouTube (ou só o código dele).");
             return;
         }
 
