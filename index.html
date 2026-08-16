@@ -27,7 +27,7 @@
     <!-- NAO APAGUE esta linha: e ela que carrega toda a formatacao do site.
          O "?v=3" faz o navegador buscar a versao nova em vez da guardada.
          Ao alterar o style.css, troque para ?v=4, ?v=5 ... -->
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
 
     <!-- Ficha de identificação do site para os buscadores -->
     <script type="application/ld+json">
@@ -276,36 +276,73 @@
 
                 <div class="livros-grid">
 
+                    <!-- Para acrescentar um livro, copie um bloco <article> inteiro e
+                         troque o título, a capa e o nome do PDF (nos DOIS lugares:
+                         no href do "Baixar PDF" e no data-pdf do "Ler aqui"). -->
+
                     <article class="livro">
-                        <div class="livro-capa"><img src="imagens/livro1.jpg" alt="Capa do livro Código da Justiça Divina"></div>
+                        <div class="livro-capa"><img src="imagens/justiciadivina-min.jpg" alt="Capa do livro Código de la Justicia Divina"></div>
                         <div class="livro-info">
-                            <h3>Código da Justiça Divina</h3>
-                            <p>
-                                Reúne os ensinamentos sobre a lei que rege o equilíbrio entre as
-                                ações e as suas consequências, apresentados em linguagem acessível
-                                a quem inicia o estudo.
-                            </p>
-                            <!-- Coloque o PDF em arquivos/ e ajuste o nome nos dois lugares -->
+                            <h3>Código de la Justicia Divina</h3>
+                            <!-- descrição do livro entra aqui, num <p> -->
                             <div class="livro-acoes">
-                                <a class="botao botao-principal" href="arquivos/codigo-justica-divina.pdf" download>Baixar PDF</a>
-                                <button class="botao botao-secundario abrir-pdf" data-pdf="arquivos/codigo-justica-divina.pdf">Ler aqui</button>
-                                <a href="#contato" class="livro-link">Solicitar exemplar</a>
+                                <a class="botao botao-principal" href="livros/codigo_de_la_justicia_divina.pdf" download>Baixar PDF</a>
+                                <button class="botao botao-secundario abrir-pdf" data-pdf="livros/codigo_de_la_justicia_divina.pdf">Ler aqui</button>
                             </div>
                         </div>
                     </article>
 
                     <article class="livro">
-                        <div class="livro-capa"><img src="imagens/livro2.jpg" alt="Capa do livro Código Tântrico Alfa e Ômega Galáctico"></div>
+                        <div class="livro-capa"><img src="imagens/portada.jpg" alt="Capa do livro Código Tántrico Alfa y Omega Galáctico"></div>
                         <div class="livro-info">
-                            <h3>Código Tântrico Alfa e Ômega Galáctico</h3>
-                            <p>
-                                Apresenta a união entre a senda tântrica e a cristã, os símbolos do
-                                Yantra e o sentido do ciclo que começa e se completa.
-                            </p>
+                            <h3>Código Tántrico Alfa y Omega Galáctico</h3>
                             <div class="livro-acoes">
-                                <a class="botao botao-principal" href="arquivos/codigo-tantrico.pdf" download>Baixar PDF</a>
-                                <button class="botao botao-secundario abrir-pdf" data-pdf="arquivos/codigo-tantrico.pdf">Ler aqui</button>
-                                <a href="#contato" class="livro-link">Solicitar exemplar</a>
+                                <a class="botao botao-principal" href="livros/codigo-tantrico-alfa-y-omega-galactico.pdf" download>Baixar PDF</a>
+                                <button class="botao botao-secundario abrir-pdf" data-pdf="livros/codigo-tantrico-alfa-y-omega-galactico.pdf">Ler aqui</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="livro">
+                        <div class="livro-capa"></div>
+                        <div class="livro-info">
+                            <h3>Código Tántrico La Flor de la Vida</h3>
+                            <div class="livro-acoes">
+                                <a class="botao botao-principal" href="livros/codigo-tantrico-la-flor-de-la-vida.pdf" download>Baixar PDF</a>
+                                <button class="botao botao-secundario abrir-pdf" data-pdf="livros/codigo-tantrico-la-flor-de-la-vida.pdf">Ler aqui</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="livro">
+                        <div class="livro-capa"></div>
+                        <div class="livro-info">
+                            <h3>Código Tántrico Celestial — Mensaje de los Divinos Padres Celestiales</h3>
+                            <div class="livro-acoes">
+                                <a class="botao botao-principal" href="livros/codigo-tantrico-celestial-mensaje-de-los-divinos-padres-celestiales.pdf" download>Baixar PDF</a>
+                                <button class="botao botao-secundario abrir-pdf" data-pdf="livros/codigo-tantrico-celestial-mensaje-de-los-divinos-padres-celestiales.pdf">Ler aqui</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="livro">
+                        <div class="livro-capa"></div>
+                        <div class="livro-info">
+                            <h3>Código de Síntesis Holístico</h3>
+                            <div class="livro-acoes">
+                                <a class="botao botao-principal" href="livros/codigo-de-sintesis-holistico.pdf" download>Baixar PDF</a>
+                                <button class="botao botao-secundario abrir-pdf" data-pdf="livros/codigo-de-sintesis-holistico.pdf">Ler aqui</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="livro">
+                        <div class="livro-capa"></div>
+                        <div class="livro-info">
+                            <h3>Eka Tantra</h3>
+                            <div class="livro-acoes">
+                                <a class="botao botao-principal" href="livros/eka-tantra.pdf" download>Baixar PDF</a>
+                                <button class="botao botao-secundario abrir-pdf" data-pdf="livros/eka-tantra.pdf">Ler aqui</button>
                             </div>
                         </div>
                     </article>

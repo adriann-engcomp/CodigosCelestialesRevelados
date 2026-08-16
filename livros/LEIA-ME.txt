@@ -1,0 +1,56 @@
+PASTA DOS LIVROS EM PDF
+=======================
+
+Os arquivos aqui aparecem na seção "Livros" do site, com dois botões:
+"Baixar PDF" e "Ler aqui" (abre o livro dentro da própria página).
+
+Arquivos usados hoje pelo site:
+
+    codigo_de_la_justicia_divina.pdf
+    codigo-tantrico-alfa-y-omega-galactico.pdf
+    codigo-tantrico-la-flor-de-la-vida.pdf
+    codigo-tantrico-celestial-mensaje-de-los-divinos-padres-celestiales.pdf
+    codigo-de-sintesis-holistico.pdf
+    eka-tantra.pdf
+
+REGRA DE OURO PARA O NOME DO ARQUIVO
+------------------------------------
+Só letras minúsculas sem acento, números e hífen. Nada de espaço,
+nada de acento, nada de maiúscula.
+
+Motivo: no endereço do site, espaço vira %20 e acento vira %C3%B3, e o
+GitHub diferencia maiúscula de minúscula (ao contrário do Windows). Um
+arquivo chamado "Código Tántrico.pdf" funciona no seu computador e quebra
+no site publicado.
+
+Três arquivos foram renomeados por causa disso:
+
+    Código de Síntisis Holistico..pdf         -> codigo-de-sintesis-holistico.pdf
+    Código Tántrico Alfa y Omega Galactico.pdf -> codigo-tantrico-alfa-y-omega-galactico.pdf
+    Eka Tantra.pdf                             -> eka-tantra.pdf
+
+PARA ACRESCENTAR OU TROCAR UM LIVRO
+-----------------------------------
+No index.html, na seção LIVROS, copie um bloco <article class="livro">
+inteiro e troque:
+
+    - o <h3> com o título
+    - a imagem da capa (ou deixe a <div class="livro-capa"> vazia, que o
+      site desenha um fundo com estrela no lugar)
+    - o nome do PDF em DOIS lugares: no href do "Baixar PDF" e no
+      data-pdf do "Ler aqui"
+
+LIMITES
+-------
+Máximo de 100 MB por arquivo (25 MB se enviar arrastando pelo site do
+GitHub). O site inteiro pode ter 1 GB, com 100 GB de tráfego por mês.
+
+Hoje os seis livros somam menos de 6 MB — bem folgado.
+
+COMO O SITE SE COMPORTA
+-----------------------
+- No computador, o "Ler aqui" abre o PDF dentro da página.
+- No celular, abre em outra aba: navegador de celular não exibe PDF
+  embutido, e insistir mostraria uma tela de erro.
+- Se o arquivo não estiver aqui, o site avisa em português em vez de
+  mostrar o erro do navegador.
