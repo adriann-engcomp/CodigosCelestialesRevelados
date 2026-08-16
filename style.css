@@ -330,6 +330,30 @@ a {
     font-weight: 600;
 }
 
+/* ================= BANDEIRA WIPHALA ================= */
+
+.bandeira {
+    /* ocupa a largura das duas colunas de texto */
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.bandeira img {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    border: 1px solid var(--borda);
+    border-radius: 3px;
+}
+
+.bandeira figcaption {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--texto-fraco);
+}
+
 /* ================= CARTÕES (quem somos) ================= */
 
 .cartoes-grid {
