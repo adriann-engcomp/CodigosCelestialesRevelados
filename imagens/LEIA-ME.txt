@@ -1,0 +1,36 @@
+PASTA DE IMAGENS
+================
+
+Coloque as imagens aqui com EXATAMENTE estes nomes. Assim você não
+precisa mexer no código — o site encontra as fotos sozinho.
+
+Galeria de fotos (seção "Fotos"):
+    foto1.jpg
+    foto2.jpg
+    foto3.jpg
+    foto4.jpg
+    foto5.jpg
+    foto6.jpg
+
+Capas dos livros (seção "Livros"):
+    livro1.jpg   -> Código da Justiça Divina
+    livro2.jpg   -> Código Tântrico Alfa e Ômega Galáctico
+
+Dicas
+-----
+1. Use letras minúsculas nos nomes. No GitHub, "Foto1.JPG" e "foto1.jpg"
+   são arquivos diferentes (no Windows não, e é aí que dá confusão).
+
+2. Deixe cada imagem com menos de 500 KB. Fotos direto do celular têm
+   4 MB ou mais e deixam o site lento. Dá para reduzir em sites como
+   squoosh.app ou tinypng.com.
+
+3. Para a galeria, imagens no formato deitado (paisagem) ficam melhores.
+   Para as capas dos livros, formato em pé (retrato).
+
+4. Enquanto uma imagem não existir, o site mostra um fundo decorativo
+   com uma estrela no lugar — nada quebra.
+
+5. Quer mais de 6 fotos? Abra o index.html, procure a seção "FOTOS" e
+   copie uma linha inteira que comece com <figure class="foto">,
+   trocando foto6.jpg por foto7.jpg e assim por diante.
