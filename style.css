@@ -782,25 +782,55 @@ a {
     color: var(--dourado);
 }
 
-/* área onde a página do PDF é desenhada */
+/* área de leitura: rola da primeira até a última página */
 .leitor-palco {
     padding: 16px;
-    max-height: 78vh;
-    overflow: auto;
-    display: flex;
-    justify-content: center;
+    height: 78vh;
+    overflow-y: auto;
+    overflow-x: hidden;
     background: #0c1026;
+    /* a rolagem para de "vazar" para a página quando chega ao fim */
+    overscroll-behavior: contain;
 }
 
-.leitor-palco canvas {
+.leitor-folha-caixa {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto 18px;
+}
+
+.leitor-folha {
     display: block;
     max-width: 100%;
     background: #fff;
-    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
 }
 
-.leitor-palco canvas[hidden] {
-    display: none;
+/* número discreto no canto de cada folha */
+.leitor-folha-numero {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 0.72rem;
+    color: var(--texto-fraco);
+    background: rgba(10, 14, 33, 0.75);
+}
+
+.folha-falhou .leitor-folha {
+    opacity: 0.25;
+}
+
+.folha-falhou::after {
+    content: "não foi possível desenhar esta página";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--texto-fraco);
 }
 
 .leitor-controles {

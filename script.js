@@ -234,7 +234,6 @@ if (leitor && window.pdfjsLib) {
     pdfjsLib.GlobalWorkerOptions.workerSrc = "js/pdfjs/pdf.worker.min.js";
 
     const palco = document.getElementById("leitorPalco");
-    const tela = document.getElementById("leitorCanvas");
     const rotuloPagina = document.getElementById("leitorPagina");
     const botaoAnterior = document.getElementById("leitorAnterior");
     const botaoProxima = document.getElementById("leitorProxima");
@@ -242,8 +241,19 @@ if (leitor && window.pdfjsLib) {
     const linkNovaAba = leitor.querySelector(".leitor-nova-aba");
 
     let documento = null;
+    let folhas = [];            // uma entrada por página do livro
     let paginaAtual = 1;
-    let desenhando = false;
+    let remontando;
+
+    /* Desenha uma página só quando ela chega perto da área visível.
+       Sem isto, abrir um livro de 91 páginas travaria o navegador. */
+    const vigia = new IntersectionObserver((entradas) => {
+        entradas.forEach((entrada) => {
+            if (!entrada.isIntersecting) return;
+            const folha = folhas[Number(entrada.target.dataset.indice)];
+            if (folha) agendarDesenho(folha);
+        });
+    }, { root: palco, rootMargin: "400px 0px" });
 
     function limparAviso() {
         const antigo = leitor.querySelector(".leitor-aviso");
@@ -256,49 +266,70 @@ if (leitor && window.pdfjsLib) {
         aviso.className = "leitor-aviso";
         aviso.textContent = texto;
         palco.appendChild(aviso);
-        tela.hidden = true;
+    }
+
+    function esvaziarPalco() {
+        folhas.forEach((f) => vigia.unobserve(f.canvas));
+        folhas = [];
+        palco.innerHTML = "";
     }
 
     function fecharLeitor() {
         leitor.hidden = true;
         leitor.dataset.aberto = "";
+        esvaziarPalco();
         if (documento) {
             documento.destroy();
             documento = null;
         }
     }
 
-    async function desenharPagina(numero) {
-        if (!documento || desenhando) return;
-        desenhando = true;
+    /* Desenha uma folha por vez. Sem isto, um livro grande dispararia
+       dezenas de desenhos ao mesmo tempo e a página engasgaria. */
+    let fila = Promise.resolve();
+
+    function agendarDesenho(folha) {
+        if (folha.desenhada || folha.naFila) return;
+        folha.naFila = true;
+        fila = fila
+            .then(() => desenharFolha(folha))
+            .then(() => { folha.naFila = false; });
+    }
+
+    /* Só vale desenhar o que está perto da área de leitura. A folha que
+       não passar aqui continua marcada como pendente e será desenhada
+       quando a rolagem chegar nela. */
+    function estaPerto(folha) {
+        const f = folha.caixa.getBoundingClientRect();
+        const p = palco.getBoundingClientRect();
+        return f.bottom > p.top - 600 && f.top < p.bottom + 600;
+    }
+
+    function desenharVisiveis() {
+        folhas.forEach((folha) => {
+            if (!folha.desenhada && estaPerto(folha)) agendarDesenho(folha);
+        });
+    }
+
+    async function desenharFolha(folha) {
+        if (folha.desenhada || !estaPerto(folha)) return;
+        folha.desenhada = true;   // marca antes, para não desenhar duas vezes
 
         try {
-            const pagina = await documento.getPage(numero);
-
-            // ajusta a página à largura disponível, sem passar do dobro
-            const disponivel = palco.clientWidth - 32;
-            const original = pagina.getViewport({ scale: 1 });
-            const escala = Math.min(disponivel / original.width, 2);
-
-            // desenha na resolução da tela para não sair borrado
+            // desenha na resolução real da tela, para não sair borrado
             const nitidez = window.devicePixelRatio || 1;
-            const vista = pagina.getViewport({ scale: escala * nitidez });
+            const vista = folha.pagina.getViewport({ scale: folha.escala * nitidez });
 
-            tela.width = vista.width;
-            tela.height = vista.height;
-            tela.style.width = (vista.width / nitidez) + "px";
-            tela.style.height = (vista.height / nitidez) + "px";
-            tela.hidden = false;
+            folha.canvas.width = vista.width;
+            folha.canvas.height = vista.height;
 
-            const tarefa = pagina.render({
-                canvasContext: tela.getContext("2d"),
+            const tarefa = folha.pagina.render({
+                canvasContext: folha.canvas.getContext("2d"),
                 viewport: vista
             });
 
-            /* Rede de segurança: se o desenho não terminar, mostra um aviso
-               em vez de deixar a área em branco sem explicação. O PDF.js
-               pausa o desenho quando a aba está em segundo plano, então só
-               contamos o tempo com a aba à vista. */
+            /* Rede de segurança: o PDF.js pausa o desenho quando a aba está
+               em segundo plano, então só contamos o tempo com a aba à vista. */
             await Promise.race([
                 tarefa.promise,
                 new Promise((_, falhar) => {
@@ -307,16 +338,73 @@ if (leitor && window.pdfjsLib) {
                     }, 20000);
                 })
             ]);
-
-            paginaAtual = numero;
-            rotuloPagina.textContent = numero + " / " + documento.numPages;
-            botaoAnterior.disabled = numero <= 1;
-            botaoProxima.disabled = numero >= documento.numPages;
         } catch (e) {
-            mostrarAviso("Não foi possível desenhar esta página. Use \"Abrir em nova aba\" para ler o arquivo.");
-        } finally {
-            desenhando = false;
+            folha.desenhada = false;
+            folha.caixa.classList.add("folha-falhou");
         }
+    }
+
+    /* Cria uma folha em branco para cada página, já com o tamanho certo,
+       para a barra de rolagem nascer do tamanho do livro inteiro. */
+    async function montarFolhas() {
+        esvaziarPalco();
+
+        const disponivel = palco.clientWidth - 32;
+
+        for (let numero = 1; numero <= documento.numPages; numero++) {
+            const pagina = await documento.getPage(numero);
+            const original = pagina.getViewport({ scale: 1 });
+            const escala = Math.min(disponivel / original.width, 2);
+            const vista = pagina.getViewport({ scale: escala });
+
+            const caixa = document.createElement("div");
+            caixa.className = "leitor-folha-caixa";
+
+            const canvas = document.createElement("canvas");
+            canvas.className = "leitor-folha";
+            canvas.dataset.indice = numero - 1;
+            canvas.style.width = vista.width + "px";
+            canvas.style.height = vista.height + "px";
+
+            const numeracao = document.createElement("span");
+            numeracao.className = "leitor-folha-numero";
+            numeracao.textContent = numero;
+
+            caixa.appendChild(canvas);
+            caixa.appendChild(numeracao);
+            palco.appendChild(caixa);
+
+            folhas.push({ pagina, canvas, caixa, escala, desenhada: false });
+            vigia.observe(canvas);
+        }
+
+        atualizarContador();
+        desenharVisiveis();
+    }
+
+    /* Descobre qual página está ocupando o topo da área de leitura. */
+    function atualizarContador() {
+        if (!folhas.length) return;
+
+        const topo = palco.getBoundingClientRect().top;
+        let atual = 1;
+
+        for (let i = 0; i < folhas.length; i++) {
+            if (folhas[i].caixa.getBoundingClientRect().top - topo <= 80) {
+                atual = i + 1;
+            }
+        }
+
+        paginaAtual = atual;
+        rotuloPagina.textContent = atual + " / " + folhas.length;
+        botaoAnterior.disabled = atual <= 1;
+        botaoProxima.disabled = atual >= folhas.length;
+    }
+
+    function irParaPagina(numero) {
+        const folha = folhas[numero - 1];
+        if (!folha) return;
+        palco.scrollTo({ top: folha.caixa.offsetTop - 8, behavior: "smooth" });
     }
 
     async function abrirLeitor(caminho, titulo) {
@@ -331,6 +419,7 @@ if (leitor && window.pdfjsLib) {
             documento = null;
         }
 
+        esvaziarPalco();
         limparAviso();
         barraTitulo.textContent = titulo;
         linkNovaAba.href = caminho;
@@ -343,7 +432,7 @@ if (leitor && window.pdfjsLib) {
 
         try {
             documento = await pdfjsLib.getDocument(caminho).promise;
-            await desenharPagina(1);
+            await montarFolhas();
         } catch (e) {
             documento = null;
             rotuloPagina.textContent = "—";
@@ -351,23 +440,31 @@ if (leitor && window.pdfjsLib) {
         }
     }
 
-    botaoAnterior.addEventListener("click", () => desenharPagina(paginaAtual - 1));
-    botaoProxima.addEventListener("click", () => desenharPagina(paginaAtual + 1));
+    let esperandoDesenho;
+    palco.addEventListener("scroll", () => {
+        atualizarContador();
+        clearTimeout(esperandoDesenho);
+        esperandoDesenho = setTimeout(desenharVisiveis, 120);
+    });
+    botaoAnterior.addEventListener("click", () => irParaPagina(paginaAtual - 1));
+    botaoProxima.addEventListener("click", () => irParaPagina(paginaAtual + 1));
     leitor.querySelector(".leitor-fechar").addEventListener("click", fecharLeitor);
 
-    // setas do teclado viram os pés da página
+    // setas do teclado pulam de página
     document.addEventListener("keydown", (e) => {
         if (leitor.hidden) return;
-        if (e.key === "ArrowLeft") desenharPagina(paginaAtual - 1);
-        if (e.key === "ArrowRight") desenharPagina(paginaAtual + 1);
+        if (e.key === "ArrowLeft") irParaPagina(paginaAtual - 1);
+        if (e.key === "ArrowRight") irParaPagina(paginaAtual + 1);
     });
 
-    // redesenha ao mudar a largura da janela (ex.: girar o celular)
-    let esperandoRedesenho;
+    // ao mudar a largura (ex.: girar o celular), remonta na nova escala
     window.addEventListener("resize", () => {
         if (leitor.hidden || !documento) return;
-        clearTimeout(esperandoRedesenho);
-        esperandoRedesenho = setTimeout(() => desenharPagina(paginaAtual), 250);
+        clearTimeout(remontando);
+        remontando = setTimeout(() => {
+            const guardada = paginaAtual;
+            montarFolhas().then(() => irParaPagina(guardada));
+        }, 300);
     });
 
     document.querySelectorAll(".abrir-pdf").forEach((botao) => {
