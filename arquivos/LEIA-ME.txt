@@ -1,36 +1,41 @@
-PASTA DE ARQUIVOS PARA DOWNLOAD
-===============================
+PASTA DOS PDFs
+==============
 
-Aqui ficam os PDFs dos livros e os vídeos em .mp4 que o visitante pode
-baixar e ver dentro da página.
+Aqui ficam os PDFs dos livros, que o visitante pode baixar e ler dentro
+da própria página.
 
-Nomes esperados pelo site (não precisa mexer no código se usar estes):
+(Os vídeos não entram aqui: ficam no YouTube e o site apenas aponta para
+lá, na seção de vídeos.)
+
+Nomes esperados pelo site (usando estes, não precisa mexer no código):
 
     codigo-justica-divina.pdf   -> livro Código da Justiça Divina
     codigo-tantrico.pdf         -> livro Código Tântrico Alfa e Ômega Galáctico
-    mensagem.mp4                -> vídeo guardado no próprio site
 
-Se preferir outro nome, troque nos dois lugares do index.html: no botão
+Se preferir outro nome, troque nos DOIS lugares do index.html: no botão
 "Baixar PDF" (href) e no botão "Ler aqui" (data-pdf).
+
+Para acrescentar um terceiro livro, copie um bloco <article class="livro">
+inteiro no index.html e ajuste título, texto, capa e nome do PDF.
 
 LIMITES QUE IMPORTAM
 --------------------
 1. Máximo de 100 MB por arquivo. Acima disso o GitHub recusa o envio.
-   Pelo site do GitHub (arrastando), o limite cai para 25 MB.
+   Pelo site do GitHub (arrastando o arquivo), o limite cai para 25 MB.
 
-2. O site inteiro pode ter até 1 GB, e 100 GB de tráfego por mês.
-   Um vídeo de 80 MB baixado 1.250 vezes já consome a cota do mês.
+2. O site inteiro pode ter até 1 GB, com 100 GB de tráfego por mês.
 
-3. Para vídeo longo, use o YouTube (a seção de vídeos acima). Sai de graça,
-   não gasta a sua cota e ainda funciona melhor em internet lenta, porque o
-   YouTube ajusta a qualidade sozinho.
+3. PDF de livro escaneado passa fácil de 100 MB. Dá para reduzir bastante
+   em ilovepdf.com/compress_pdf sem perder legibilidade. Abaixo de 20 MB
+   é o ideal: acima disso a leitura na página fica lenta no celular.
 
-4. PDF de livro escaneado passa fácil de 100 MB. Dá para reduzir bastante
-   em ilovepdf.com/compress_pdf sem perder legibilidade.
+COMO O SITE SE COMPORTA
+-----------------------
+- No computador, o "Ler aqui" abre o PDF dentro da própria página.
 
-SOBRE O "LER AQUI"
-------------------
-No computador, o PDF abre dentro da própria página.
+- No celular, o site abre o arquivo em outra aba. Isso é proposital:
+  quase nenhum navegador de celular exibe PDF embutido, e insistir nisso
+  resultaria em uma tela de erro.
 
-No celular, quase nenhum navegador exibe PDF embutido — por isso o site
-detecta a tela pequena e abre o arquivo em outra aba. É proposital.
+- Enquanto o PDF não estiver nesta pasta, o site avisa em português que o
+  arquivo ainda não foi colocado, em vez de mostrar erro do navegador.

@@ -704,38 +704,6 @@ a {
     margin-bottom: 20px;
 }
 
-/* ========== VÍDEO GUARDADO NO PRÓPRIO SITE (.mp4) ========== */
-
-.video-arquivo {
-    margin-top: 24px;
-    border: 1px solid var(--borda);
-    border-radius: 3px;
-    overflow: hidden;
-    background: #05070f;
-}
-
-.video-arquivo video {
-    width: 100%;
-    max-height: 70vh;
-    display: block;
-    background: #000;
-}
-
-.video-arquivo-rodape {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    padding: 16px 20px;
-    background: var(--fundo-cartao);
-}
-
-.video-arquivo-rodape .video-titulo {
-    color: var(--texto);
-    font-size: 1rem;
-}
-
 /* ========== BOTÕES DOS LIVROS ========== */
 
 .livro-acoes {
@@ -838,11 +806,6 @@ a {
     .livro-acoes .botao {
         flex: 1 1 100%;
         text-align: center;
-    }
-
-    .video-arquivo-rodape {
-        flex-direction: column;
-        align-items: flex-start;
     }
 }
 
