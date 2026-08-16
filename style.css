@@ -782,15 +782,63 @@ a {
     color: var(--dourado);
 }
 
-.leitor-pdf iframe {
-    width: 100%;
-    height: 78vh;
-    border: none;
-    display: block;
-    background: #1c1c1c;
+/* área onde a página do PDF é desenhada */
+.leitor-palco {
+    padding: 16px;
+    max-height: 78vh;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    background: #0c1026;
 }
 
-/* aviso que aparece quando o navegador não exibe PDF embutido */
+.leitor-palco canvas {
+    display: block;
+    max-width: 100%;
+    background: #fff;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.55);
+}
+
+.leitor-palco canvas[hidden] {
+    display: none;
+}
+
+.leitor-controles {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--borda);
+}
+
+.leitor-nav {
+    background: none;
+    border: 1px solid var(--borda);
+    border-radius: 2px;
+    color: var(--dourado);
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+}
+
+.leitor-nav:hover:not(:disabled) {
+    background: rgba(224, 185, 106, 0.12);
+}
+
+.leitor-nav:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.leitor-pagina {
+    font-size: 0.85rem;
+    color: var(--texto-fraco);
+    min-width: 90px;
+    text-align: center;
+}
+
 .leitor-aviso {
     padding: 40px 24px;
     text-align: center;

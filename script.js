@@ -221,72 +221,154 @@ const observador = new IntersectionObserver(
 
 alvos.forEach((el) => observador.observe(el));
 
-/* ---------- 8. Leitor de PDF dos livros ---------- */
+/* ---------- 8. Leitor de PDF dos livros ----------
+
+   Usa o PDF.js (Mozilla) para desenhar cada página num <canvas>.
+   Assim a leitura funciona igual em todo navegador, inclusive no
+   celular — o visualizador interno do navegador não é usado. */
 
 const leitor = document.getElementById("leitorPdf");
 
-if (leitor) {
+if (leitor && window.pdfjsLib) {
 
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "js/pdfjs/pdf.worker.min.js";
+
+    const palco = document.getElementById("leitorPalco");
+    const tela = document.getElementById("leitorCanvas");
+    const rotuloPagina = document.getElementById("leitorPagina");
+    const botaoAnterior = document.getElementById("leitorAnterior");
+    const botaoProxima = document.getElementById("leitorProxima");
     const barraTitulo = leitor.querySelector(".leitor-titulo");
     const linkNovaAba = leitor.querySelector(".leitor-nova-aba");
+
+    let documento = null;
+    let paginaAtual = 1;
+    let desenhando = false;
+
+    function limparAviso() {
+        const antigo = leitor.querySelector(".leitor-aviso");
+        if (antigo) antigo.remove();
+    }
+
+    function mostrarAviso(texto) {
+        limparAviso();
+        const aviso = document.createElement("p");
+        aviso.className = "leitor-aviso";
+        aviso.textContent = texto;
+        palco.appendChild(aviso);
+        tela.hidden = true;
+    }
 
     function fecharLeitor() {
         leitor.hidden = true;
         leitor.dataset.aberto = "";
-        const antigo = leitor.querySelector("iframe, .leitor-aviso");
-        if (antigo) antigo.remove();
+        if (documento) {
+            documento.destroy();
+            documento = null;
+        }
     }
 
-    /* Confere se o PDF existe antes de abrir, para mostrar um aviso claro
-       em vez da tela de erro do navegador. */
-    async function arquivoExiste(caminho) {
-        // aberto por duplo clique (file://) não dá para checar; segue direto
-        if (location.protocol === "file:") return true;
+    async function desenharPagina(numero) {
+        if (!documento || desenhando) return;
+        desenhando = true;
+
         try {
-            const resposta = await fetch(caminho, { method: "HEAD" });
-            return resposta.ok;
+            const pagina = await documento.getPage(numero);
+
+            // ajusta a página à largura disponível, sem passar do dobro
+            const disponivel = palco.clientWidth - 32;
+            const original = pagina.getViewport({ scale: 1 });
+            const escala = Math.min(disponivel / original.width, 2);
+
+            // desenha na resolução da tela para não sair borrado
+            const nitidez = window.devicePixelRatio || 1;
+            const vista = pagina.getViewport({ scale: escala * nitidez });
+
+            tela.width = vista.width;
+            tela.height = vista.height;
+            tela.style.width = (vista.width / nitidez) + "px";
+            tela.style.height = (vista.height / nitidez) + "px";
+            tela.hidden = false;
+
+            const tarefa = pagina.render({
+                canvasContext: tela.getContext("2d"),
+                viewport: vista
+            });
+
+            /* Rede de segurança: se o desenho não terminar, mostra um aviso
+               em vez de deixar a área em branco sem explicação. O PDF.js
+               pausa o desenho quando a aba está em segundo plano, então só
+               contamos o tempo com a aba à vista. */
+            await Promise.race([
+                tarefa.promise,
+                new Promise((_, falhar) => {
+                    setTimeout(() => {
+                        if (!document.hidden) falhar(new Error("demorou demais"));
+                    }, 20000);
+                })
+            ]);
+
+            paginaAtual = numero;
+            rotuloPagina.textContent = numero + " / " + documento.numPages;
+            botaoAnterior.disabled = numero <= 1;
+            botaoProxima.disabled = numero >= documento.numPages;
         } catch (e) {
-            return false;
+            mostrarAviso("Não foi possível desenhar esta página. Use \"Abrir em nova aba\" para ler o arquivo.");
+        } finally {
+            desenhando = false;
         }
     }
 
     async function abrirLeitor(caminho, titulo) {
-        /* No celular quase nenhum navegador exibe PDF dentro da página:
-           abrir em outra aba é o que realmente funciona lá. */
-        if (window.matchMedia("(max-width: 700px)").matches) {
-            window.open(caminho, "_blank", "noopener");
-            return;
-        }
-
         // clicou de novo no mesmo livro: fecha
         if (leitor.dataset.aberto === caminho) {
             fecharLeitor();
             return;
         }
 
-        fecharLeitor();
-
-        barraTitulo.textContent = titulo;
-        linkNovaAba.href = caminho;
-        leitor.hidden = false;
-        leitor.dataset.aberto = caminho;
-
-        if (!(await arquivoExiste(caminho))) {
-            const aviso = document.createElement("p");
-            aviso.className = "leitor-aviso";
-            aviso.textContent = "O arquivo " + caminho + " ainda não foi colocado na pasta.";
-            leitor.appendChild(aviso);
-            return;
+        if (documento) {
+            documento.destroy();
+            documento = null;
         }
 
-        const quadro = document.createElement("iframe");
-        quadro.src = caminho;
-        quadro.title = titulo;
-        leitor.appendChild(quadro);
+        limparAviso();
+        barraTitulo.textContent = titulo;
+        linkNovaAba.href = caminho;
+        rotuloPagina.textContent = "abrindo…";
+        botaoAnterior.disabled = true;
+        botaoProxima.disabled = true;
+        leitor.hidden = false;
+        leitor.dataset.aberto = caminho;
         leitor.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        try {
+            documento = await pdfjsLib.getDocument(caminho).promise;
+            await desenharPagina(1);
+        } catch (e) {
+            documento = null;
+            rotuloPagina.textContent = "—";
+            mostrarAviso("Não foi possível abrir " + caminho + ". Verifique se o arquivo está na pasta.");
+        }
     }
 
+    botaoAnterior.addEventListener("click", () => desenharPagina(paginaAtual - 1));
+    botaoProxima.addEventListener("click", () => desenharPagina(paginaAtual + 1));
     leitor.querySelector(".leitor-fechar").addEventListener("click", fecharLeitor);
+
+    // setas do teclado viram os pés da página
+    document.addEventListener("keydown", (e) => {
+        if (leitor.hidden) return;
+        if (e.key === "ArrowLeft") desenharPagina(paginaAtual - 1);
+        if (e.key === "ArrowRight") desenharPagina(paginaAtual + 1);
+    });
+
+    // redesenha ao mudar a largura da janela (ex.: girar o celular)
+    let esperandoRedesenho;
+    window.addEventListener("resize", () => {
+        if (leitor.hidden || !documento) return;
+        clearTimeout(esperandoRedesenho);
+        esperandoRedesenho = setTimeout(() => desenharPagina(paginaAtual), 250);
+    });
 
     document.querySelectorAll(".abrir-pdf").forEach((botao) => {
         botao.addEventListener("click", () => {

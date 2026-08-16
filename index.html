@@ -27,7 +27,7 @@
     <!-- NAO APAGUE esta linha: e ela que carrega toda a formatacao do site.
          O "?v=3" faz o navegador buscar a versao nova em vez da guardada.
          Ao alterar o style.css, troque para ?v=4, ?v=5 ... -->
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
 
     <!-- Ficha de identificação do site para os buscadores -->
     <script type="application/ld+json">
@@ -352,11 +352,23 @@
 
                 <!-- O leitor de PDF aparece aqui quando alguém clica em "Ler aqui" -->
                 <div class="leitor-pdf" id="leitorPdf" hidden>
+
                     <div class="leitor-barra">
                         <span class="leitor-titulo"></span>
                         <a class="leitor-nova-aba" target="_blank" rel="noopener">Abrir em nova aba</a>
                         <button class="leitor-fechar" aria-label="Fechar leitor">✕</button>
                     </div>
+
+                    <div class="leitor-palco" id="leitorPalco">
+                        <canvas id="leitorCanvas"></canvas>
+                    </div>
+
+                    <div class="leitor-controles">
+                        <button class="leitor-nav" id="leitorAnterior">‹ Anterior</button>
+                        <span class="leitor-pagina" id="leitorPagina">—</span>
+                        <button class="leitor-nav" id="leitorProxima">Próxima ›</button>
+                    </div>
+
                 </div>
 
             </div>
@@ -410,7 +422,10 @@
         <img id="lightboxImagem" src="" alt="">
     </div>
 
-    <script src="script.js?v=5"></script>
+    <!-- PDF.js (Mozilla, Apache 2.0) — desenha o PDF na própria página,
+         sem depender do visualizador interno do navegador. -->
+    <script src="js/pdfjs/pdf.min.js"></script>
+    <script src="script.js?v=7"></script>
 </body>
 
 </html>
