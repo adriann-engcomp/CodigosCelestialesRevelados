@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://adriann-engcomp.github.io/CodigosCelestialesRevelados/sitemap.xml

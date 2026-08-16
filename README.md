@@ -85,6 +85,34 @@ https://adriann-engcomp.github.io/CodigosCelestialesRevelados/
 - [ ] `style.css` → mudar as cores, se quiser: tudo está no bloco `:root`,
       nas primeiras linhas do arquivo
 
+## Aparecer no Google
+
+Já está pronto no site (não custa nada):
+
+- `sitemap.xml` — a lista de endereços que o Google deve visitar
+- `robots.txt` — libera o acesso dos robôs e aponta o sitemap
+- `<link rel="canonical">` — evita que o mesmo conteúdo conte como duplicado
+- Meta tags Open Graph + `imagens/capa-social.jpg` — a prévia com imagem que
+  aparece ao mandar o link no WhatsApp, Facebook ou Telegram
+- Ficha JSON-LD com o nome do site e a grafia em espanhol como nome alternativo
+
+**Falta um passo, e é grátis: cadastrar o site no Google Search Console**
+(<https://search.google.com/search-console>). Entre com a mesma conta Google,
+escolha **Prefixo do URL**, cole o endereço do site e confirme a posse. Depois,
+no menu **Sitemaps**, envie:
+
+```
+sitemap.xml
+```
+
+Sem isso o Google até acha o site sozinho, mas demora muito mais.
+
+> Detalhe: o `robots.txt` só passa a valer de verdade quando o site tiver
+> domínio próprio. Os buscadores só leem esse arquivo na raiz do endereço
+> (`adriann-engcomp.github.io/robots.txt`), e a raiz não pertence a este
+> repositório. O `sitemap.xml` funciona normalmente do jeito que está, desde
+> que seja enviado pelo Search Console.
+
 ## Domínio próprio (opcional)
 
 O GitHub Pages aceita um domínio comprado por você
