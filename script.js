@@ -221,5 +221,81 @@ const observador = new IntersectionObserver(
 
 alvos.forEach((el) => observador.observe(el));
 
+/* ---------- 8. Leitor de PDF dos livros ---------- */
+
+const leitor = document.getElementById("leitorPdf");
+
+if (leitor) {
+
+    const barraTitulo = leitor.querySelector(".leitor-titulo");
+    const linkNovaAba = leitor.querySelector(".leitor-nova-aba");
+
+    function fecharLeitor() {
+        leitor.hidden = true;
+        leitor.dataset.aberto = "";
+        const antigo = leitor.querySelector("iframe, .leitor-aviso");
+        if (antigo) antigo.remove();
+    }
+
+    /* Confere se o PDF existe antes de abrir, para mostrar um aviso claro
+       em vez da tela de erro do navegador. */
+    async function arquivoExiste(caminho) {
+        // aberto por duplo clique (file://) não dá para checar; segue direto
+        if (location.protocol === "file:") return true;
+        try {
+            const resposta = await fetch(caminho, { method: "HEAD" });
+            return resposta.ok;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    async function abrirLeitor(caminho, titulo) {
+        /* No celular quase nenhum navegador exibe PDF dentro da página:
+           abrir em outra aba é o que realmente funciona lá. */
+        if (window.matchMedia("(max-width: 700px)").matches) {
+            window.open(caminho, "_blank", "noopener");
+            return;
+        }
+
+        // clicou de novo no mesmo livro: fecha
+        if (leitor.dataset.aberto === caminho) {
+            fecharLeitor();
+            return;
+        }
+
+        fecharLeitor();
+
+        barraTitulo.textContent = titulo;
+        linkNovaAba.href = caminho;
+        leitor.hidden = false;
+        leitor.dataset.aberto = caminho;
+
+        if (!(await arquivoExiste(caminho))) {
+            const aviso = document.createElement("p");
+            aviso.className = "leitor-aviso";
+            aviso.textContent = "O arquivo " + caminho + " ainda não foi colocado na pasta.";
+            leitor.appendChild(aviso);
+            return;
+        }
+
+        const quadro = document.createElement("iframe");
+        quadro.src = caminho;
+        quadro.title = titulo;
+        leitor.appendChild(quadro);
+        leitor.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    leitor.querySelector(".leitor-fechar").addEventListener("click", fecharLeitor);
+
+    document.querySelectorAll(".abrir-pdf").forEach((botao) => {
+        botao.addEventListener("click", () => {
+            const livro = botao.closest(".livro");
+            const titulo = livro ? livro.querySelector("h3").textContent : "Documento";
+            abrirLeitor(botao.dataset.pdf, titulo);
+        });
+    });
+}
+
 /* roda uma vez ao abrir a página */
 aoRolar();

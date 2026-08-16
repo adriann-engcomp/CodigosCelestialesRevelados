@@ -27,7 +27,7 @@
     <!-- NAO APAGUE esta linha: e ela que carrega toda a formatacao do site.
          O "?v=3" faz o navegador buscar a versao nova em vez da guardada.
          Ao alterar o style.css, troque para ?v=4, ?v=5 ... -->
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
 
     <!-- Ficha de identificação do site para os buscadores -->
     <script type="application/ld+json">
@@ -253,6 +253,29 @@
                         <button class="video-play" aria-label="Reproduzir vídeo">▶</button>
                         <p class="video-titulo">Códigos Revelados</p>
                     </div>
+                    <div class="video" data-video="COLE_O_ID_AQUI">
+                        <button class="video-play" aria-label="Reproduzir vídeo">▶</button>
+                        <p class="video-titulo">O significado da Wiphala</p>
+                    </div>
+                    <div class="video" data-video="COLE_O_ID_AQUI">
+                        <button class="video-play" aria-label="Reproduzir vídeo">▶</button>
+                        <p class="video-titulo">Celebração da Nova Era</p>
+                    </div>
+                </div>
+
+                <!-- VÍDEO GUARDADO NO PRÓPRIO SITE (não é do YouTube).
+                     Coloque o arquivo .mp4 na pasta "arquivos".
+                     Use só para vídeos curtos: o GitHub recusa arquivo acima
+                     de 100 MB. Para vídeo longo, prefira o YouTube acima. -->
+                <div class="video-arquivo">
+                    <video controls preload="metadata" poster="imagens/capa-social.jpg">
+                        <source src="arquivos/mensagem.mp4" type="video/mp4">
+                        Seu navegador não consegue exibir este vídeo.
+                    </video>
+                    <div class="video-arquivo-rodape">
+                        <p class="video-titulo">Mensagem em vídeo</p>
+                        <a class="botao botao-secundario" href="arquivos/mensagem.mp4" download>Baixar vídeo</a>
+                    </div>
                 </div>
 
             </div>
@@ -277,7 +300,12 @@
                                 ações e as suas consequências, apresentados em linguagem acessível
                                 a quem inicia o estudo.
                             </p>
-                            <a href="#contato" class="botao botao-principal">Solicitar exemplar</a>
+                            <!-- Coloque o PDF em arquivos/ e ajuste o nome nos dois lugares -->
+                            <div class="livro-acoes">
+                                <a class="botao botao-principal" href="arquivos/codigo-justica-divina.pdf" download>Baixar PDF</a>
+                                <button class="botao botao-secundario abrir-pdf" data-pdf="arquivos/codigo-justica-divina.pdf">Ler aqui</button>
+                                <a href="#contato" class="livro-link">Solicitar exemplar</a>
+                            </div>
                         </div>
                     </article>
 
@@ -289,10 +317,23 @@
                                 Apresenta a união entre a senda tântrica e a cristã, os símbolos do
                                 Yantra e o sentido do ciclo que começa e se completa.
                             </p>
-                            <a href="#contato" class="botao botao-principal">Solicitar exemplar</a>
+                            <div class="livro-acoes">
+                                <a class="botao botao-principal" href="arquivos/codigo-tantrico.pdf" download>Baixar PDF</a>
+                                <button class="botao botao-secundario abrir-pdf" data-pdf="arquivos/codigo-tantrico.pdf">Ler aqui</button>
+                                <a href="#contato" class="livro-link">Solicitar exemplar</a>
+                            </div>
                         </div>
                     </article>
 
+                </div>
+
+                <!-- O leitor de PDF aparece aqui quando alguém clica em "Ler aqui" -->
+                <div class="leitor-pdf" id="leitorPdf" hidden>
+                    <div class="leitor-barra">
+                        <span class="leitor-titulo"></span>
+                        <a class="leitor-nova-aba" target="_blank" rel="noopener">Abrir em nova aba</a>
+                        <button class="leitor-fechar" aria-label="Fechar leitor">✕</button>
+                    </div>
                 </div>
 
             </div>
@@ -346,7 +387,7 @@
         <img id="lightboxImagem" src="" alt="">
     </div>
 
-    <script src="script.js?v=4"></script>
+    <script src="script.js?v=5"></script>
 </body>
 
 </html>
