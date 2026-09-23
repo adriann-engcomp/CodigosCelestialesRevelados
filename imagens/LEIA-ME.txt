@@ -1,22 +1,37 @@
 PASTA DE IMAGENS
 ================
 
-Coloque as imagens aqui com EXATAMENTE estes nomes. Assim você não
-precisa mexer no código — o site encontra as fotos sozinho.
+Aqui ficam as imagens da galeria (seção "Galeria de imagens", no final
+da página) e a imagem de prévia usada quando o link do site é
+compartilhado no WhatsApp, Facebook ou Telegram.
 
-Galeria de fotos (seção "Fotos"):
-    foto1.jpg
-    foto2.jpg
-    foto3.jpg
-    foto4.jpg
-    foto5.jpg
-    foto6.jpg
+Imagens usadas hoje na galeria, nesta ordem:
 
-Capas dos livros (seção "Livros"):
-    livro1.jpg   -> Código da Justiça Divina
-    livro2.jpg   -> Código Tântrico Alfa e Ômega Galáctico
+    7-min.jpg, 12-min.jpg, 13-min.jpg, 14-min.jpg, 19-min.jpg,
+    24-min.jpg, 25-min.jpg, 28-min.jpg, 29-min.jpg   (desenhos dos códigos)
+    winphala.jpg    (bandeira Wiphala)
+    yantra.jpg      (Yantra)
+    portada.jpg     (Eka Tantra)
 
-Dicas
+Outras imagens desta pasta:
+
+    capa-social.jpg           - prévia ao compartilhar o link (1200x630)
+    justiciadivina-min.jpg    - fora da galeria, era a foto "Peregrinação"
+
+As capas dos livros NÃO ficam aqui: elas estão em
+livros/ImagensDosLivros.
+
+
+PARA TROCAR A ORDEM OU ACRESCENTAR IMAGENS
+------------------------------------------
+Abra o index.html, procure a seção GALERIA DE IMAGENS e mexa nas linhas
+que começam com <figure class="foto">. A ordem das linhas é a ordem em
+que as imagens aparecem. Para acrescentar, copie uma linha inteira e
+troque o nome do arquivo (em DOIS lugares: no src e no alt) e a legenda
+do <figcaption>.
+
+
+DICAS
 -----
 1. Use letras minúsculas nos nomes. No GitHub, "Foto1.JPG" e "foto1.jpg"
    são arquivos diferentes (no Windows não, e é aí que dá confusão).
@@ -26,11 +41,6 @@ Dicas
    squoosh.app ou tinypng.com.
 
 3. Para a galeria, imagens no formato deitado (paisagem) ficam melhores.
-   Para as capas dos livros, formato em pé (retrato).
 
 4. Enquanto uma imagem não existir, o site mostra um fundo decorativo
    com uma estrela no lugar — nada quebra.
-
-5. Quer mais de 6 fotos? Abra o index.html, procure a seção "FOTOS" e
-   copie uma linha inteira que comece com <figure class="foto">,
-   trocando foto6.jpg por foto7.jpg e assim por diante.

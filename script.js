@@ -202,7 +202,7 @@ document.querySelectorAll(".foto img, .livro-capa img").forEach((img) => {
 /* ---------- 7. Elementos aparecem suavemente ao rolar ---------- */
 
 const alvos = document.querySelectorAll(
-    ".cartao, .lista-objetivos li, .foto, .video, .mensagem, .livro, .contato-item, .texto-duas-colunas p"
+    ".quadrado, .foto, .video, .livro, .audio-item, .link-item, .contato-item, .texto-duas-colunas p"
 );
 
 alvos.forEach((el) => el.classList.add("aparecer"));
@@ -277,6 +277,7 @@ if (leitor && window.pdfjsLib) {
     function fecharLeitor() {
         leitor.hidden = true;
         leitor.dataset.aberto = "";
+        document.body.classList.remove("leitor-aberto");
         esvaziarPalco();
         if (documento) {
             documento.destroy();
@@ -423,7 +424,7 @@ if (leitor && window.pdfjsLib) {
         botaoProxima.disabled = true;
         leitor.hidden = false;
         leitor.dataset.aberto = caminho;
-        leitor.scrollIntoView({ behavior: "smooth", block: "start" });
+        document.body.classList.add("leitor-aberto");
 
         try {
             documento = await pdfjsLib.getDocument(caminho).promise;
@@ -445,11 +446,12 @@ if (leitor && window.pdfjsLib) {
     botaoProxima.addEventListener("click", () => irParaPagina(paginaAtual + 1));
     leitor.querySelector(".leitor-fechar").addEventListener("click", fecharLeitor);
 
-    // setas do teclado pulam de página
+    // setas do teclado pulam de página; Esc fecha o leitor
     document.addEventListener("keydown", (e) => {
         if (leitor.hidden) return;
         if (e.key === "ArrowLeft") irParaPagina(paginaAtual - 1);
         if (e.key === "ArrowRight") irParaPagina(paginaAtual + 1);
+        if (e.key === "Escape") fecharLeitor();
     });
 
     // ao mudar a largura (ex.: girar o celular), remonta na nova escala
@@ -467,6 +469,243 @@ if (leitor && window.pdfjsLib) {
             const livro = botao.closest(".livro");
             const titulo = livro ? livro.querySelector("h3").textContent : "Documento";
             abrirLeitor(botao.dataset.pdf, titulo);
+        });
+    });
+}
+
+/* ---------- 9. Áudios gravados que ainda não estão na pasta ----------
+   Enquanto o arquivo não for enviado para a pasta "audios", o cartão
+   avisa em português em vez de mostrar um tocador quebrado. */
+
+document.querySelectorAll(".audio-item .audio-tocador").forEach((tocador) => {
+    tocador.addEventListener("error", () => {
+        tocador.closest(".audio-item").classList.add("sem-arquivo");
+    });
+});
+
+/* ---------- 10. "Escutar áudio": leitura automática do livro ----------
+
+   É o segundo tipo de áudio: em vez de um arquivo gravado, o próprio
+   navegador lê o livro em voz alta. O texto é retirado do PDF pelo
+   PDF.js, uma página por vez, e falado pela voz do aparelho.          */
+
+const barraAudio = document.getElementById("barraAudio");
+
+if (barraAudio && window.speechSynthesis) {
+
+    const barraTituloAudio = document.getElementById("barraAudioTitulo");
+    const barraEstado = document.getElementById("barraAudioEstado");
+    const botaoPausar = document.getElementById("barraAudioPausar");
+    const botaoParar = document.getElementById("barraAudioParar");
+
+    const voz = window.speechSynthesis;
+
+    let sessao = 0;          // cresce a cada leitura, para ignorar sobras da anterior
+    let docVoz = null;       // PDF aberto para a leitura
+    let botaoAtual = null;   // botão "Escutar áudio" que está lendo agora
+    let paginaVoz = 0;       // última página cujo texto já foi pego
+    let pedacos = [];        // trechos curtos da página atual
+    let indice = 0;
+    let idioma = "pt-BR";
+    let errosSeguidos = 0;   // para não ficar tentando falar sem conseguir
+
+    /* A voz do navegador engasga com textos longos, por isso o texto é
+       falado em trechos curtos, cortados no fim das frases. */
+    function dividirEmTrechos(texto) {
+        const frases = texto.replace(/\s+/g, " ").trim().split(/([.!?;:])\s+/);
+        const lista = [];
+        let atual = "";
+
+        frases.forEach((parte) => {
+            if ((atual + " " + parte).trim().length > 220) {
+                if (atual.trim()) lista.push(atual.trim());
+                atual = parte;
+            } else {
+                atual += " " + parte;
+            }
+        });
+
+        if (atual.trim()) lista.push(atual.trim());
+        return lista.filter((t) => /[A-Za-zÀ-ÿ0-9]/.test(t));
+    }
+
+    function escolherVoz() {
+        const todas = voz.getVoices() || [];
+        const prefixo = idioma.slice(0, 2).toLowerCase();
+        return todas.find((v) => v.lang && v.lang.toLowerCase().indexOf(prefixo) === 0) || null;
+    }
+
+    function mostrarEstado(texto) {
+        barraEstado.textContent = texto;
+    }
+
+    function pararLeitura() {
+        sessao++;
+        voz.cancel();
+
+        if (docVoz) {
+            docVoz.destroy();
+            docVoz = null;
+        }
+
+        if (botaoAtual) {
+            botaoAtual.textContent = "Escutar áudio";
+            botaoAtual = null;
+        }
+
+        pedacos = [];
+        indice = 0;
+        paginaVoz = 0;
+        barraAudio.hidden = true;
+        document.body.classList.remove("lendo-em-voz");
+        botaoPausar.textContent = "Pausar";
+    }
+
+    /* Pega o texto da próxima página que tenha alguma palavra.
+       Devolve false quando o livro acabou. */
+    async function pegarProximaPagina(minha) {
+        while (docVoz && paginaVoz < docVoz.numPages) {
+            paginaVoz++;
+            mostrarEstado("página " + paginaVoz + " de " + docVoz.numPages);
+
+            const pagina = await docVoz.getPage(paginaVoz);
+            const conteudo = await pagina.getTextContent();
+            if (minha !== sessao) return false;
+
+            const trechos = dividirEmTrechos(conteudo.items.map((i) => i.str).join(" "));
+
+            if (trechos.length) {
+                pedacos = trechos;
+                indice = 0;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    async function falarProximo(minha) {
+        if (minha !== sessao) return;
+
+        if (indice >= pedacos.length) {
+            const tem = await pegarProximaPagina(minha);
+            if (minha !== sessao) return;
+
+            if (!tem) {
+                mostrarEstado("leitura terminada");
+                const guardada = sessao;
+                setTimeout(() => { if (guardada === sessao) pararLeitura(); }, 4000);
+                return;
+            }
+        }
+
+        const fala = new SpeechSynthesisUtterance(pedacos[indice++]);
+        fala.lang = idioma;
+        const escolhida = escolherVoz();
+        if (escolhida) fala.voice = escolhida;
+
+        fala.onend = () => {
+            errosSeguidos = 0;
+            falarProximo(minha);
+        };
+
+        /* Um erro aqui costuma ser o "interrupted" de quem apertou Parar —
+           e aí a sessão já mudou e nada mais é falado. Se o erro se repetir,
+           é o navegador que não está conseguindo falar: melhor parar. */
+        fala.onerror = () => {
+            if (minha !== sessao) return;
+
+            errosSeguidos++;
+            if (errosSeguidos > 5) {
+                pararLeitura();
+                alert("Não foi possível ler este livro em voz alta neste navegador.\n\nVocê ainda pode baixar o PDF ou usar a seção de áudios.");
+                return;
+            }
+            falarProximo(minha);
+        };
+
+        voz.speak(fala);
+    }
+
+    async function iniciarLeitura(botao) {
+        if (!window.pdfjsLib) {
+            alert("A leitura automática precisa do PDF.js, que não carregou.");
+            return;
+        }
+
+        pararLeitura();
+
+        const minha = sessao;
+        const livro = botao.closest(".livro");
+        const titulo = livro ? livro.querySelector("h3").textContent : "Livro";
+
+        botaoAtual = botao;
+        botao.textContent = "Parar áudio";
+        idioma = botao.dataset.idioma || "pt-BR";
+        barraTituloAudio.textContent = titulo;
+        mostrarEstado("preparando a leitura…");
+        barraAudio.hidden = false;
+        document.body.classList.add("lendo-em-voz");
+        errosSeguidos = 0;
+
+        /* Fala o título agora, ainda dentro do clique. No celular a voz só
+           é liberada se a primeira fala sair junto com o toque do visitante;
+           esperar o PDF abrir seria tarde demais. */
+        const anuncio = new SpeechSynthesisUtterance(titulo);
+        anuncio.lang = idioma;
+        voz.speak(anuncio);
+
+        let aberto;
+        try {
+            aberto = await pdfjsLib.getDocument(botao.dataset.pdf).promise;
+        } catch (e) {
+            pararLeitura();
+            alert("Não foi possível abrir " + botao.dataset.pdf + ".\n\nVerifique se o arquivo está na pasta.");
+            return;
+        }
+
+        // alguém apertou Parar enquanto o livro abria
+        if (minha !== sessao) {
+            aberto.destroy();
+            return;
+        }
+
+        docVoz = aberto;
+        paginaVoz = 0;
+        pedacos = [];
+        indice = 0;
+        falarProximo(minha);
+    }
+
+    botaoPausar.addEventListener("click", () => {
+        if (voz.paused) {
+            voz.resume();
+            botaoPausar.textContent = "Pausar";
+        } else {
+            voz.pause();
+            botaoPausar.textContent = "Continuar";
+        }
+    });
+
+    botaoParar.addEventListener("click", pararLeitura);
+
+    // sair da página sem deixar a voz falando sozinha
+    window.addEventListener("beforeunload", () => voz.cancel());
+
+    document.querySelectorAll(".escutar-audio").forEach((botao) => {
+        botao.addEventListener("click", () => {
+            if (botaoAtual === botao) {
+                pararLeitura();
+            } else {
+                iniciarLeitura(botao);
+            }
+        });
+    });
+
+} else {
+    // navegador sem leitura em voz alta: o botão avisa em vez de não fazer nada
+    document.querySelectorAll(".escutar-audio").forEach((botao) => {
+        botao.addEventListener("click", () => {
+            alert("Este navegador não sabe ler em voz alta.\n\nVocê ainda pode baixar o PDF ou usar a seção de áudios.");
         });
     });
 }

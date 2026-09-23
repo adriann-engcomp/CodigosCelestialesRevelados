@@ -9,8 +9,10 @@ estilo de construção do EncantosDoLar.
 |---|---|
 | `index.html` | Todo o **conteúdo** e os textos do site |
 | `style.css` | As **cores, fontes e o layout** |
-| `script.js` | Os **comportamentos** (menu do celular, galeria, vídeos) |
-| `imagens/` | Onde ficam as fotos (veja o `LEIA-ME.txt` lá dentro) |
+| `script.js` | Os **comportamentos** (menu, galeria, vídeos, leitor de PDF, leitura em voz alta) |
+| `imagens/` | Onde ficam as fotos da galeria (veja o `LEIA-ME.txt` lá dentro) |
+| `livros/` | Os livros em PDF e as capas (veja o `LEIA-ME.txt` lá dentro) |
+| `audios/` | Os áudios gravados em MP3 (veja o `LEIA-ME.txt` lá dentro) |
 
 ## Para ver o site no seu computador
 
@@ -77,11 +79,15 @@ https://adriann-engcomp.github.io/CodigosCelestialesRevelados/
 
 - [ ] `index.html` → seção **CONTATO**: e-mail, WhatsApp e cidade reais
       (procure por `seuemail@exemplo.com` e `5588999999999`)
-- [ ] `index.html` → seção **VÍDEOS**: trocar `COLE_O_ID_AQUI` pelo código
-      do vídeo do YouTube (em `youtube.com/watch?v=**AbC123**`, o ID é `AbC123`)
-- [ ] `imagens/` → colocar `foto1.jpg` ... `foto6.jpg`, `livro1.jpg`, `livro2.jpg`
-- [ ] `index.html` → revisar os textos das seções Apresentação, Quem somos,
-      Objetivos, Mensagens e Livros (são textos-base, feitos para você editar)
+- [ ] `index.html` → seções **VÍDEOS** e **ENTREVISTAS**: trocar `COLE_O_ID_AQUI`
+      pelo código do vídeo do YouTube (em `youtube.com/watch?v=**AbC123**`, o ID é `AbC123`)
+- [ ] `index.html` → seção **LINKS**: trocar o `href="#"` e os textos pelos
+      endereços e nomes reais das outras páginas e espaços
+- [ ] `audios/` → colocar `audio1.mp3`, `audio2.mp3`, `audio3.mp3` e trocar
+      os títulos e descrições na seção **ÁUDIOS** do `index.html`
+- [ ] `livros/` → colocar os PDFs que ainda faltam, e as capas de
+      **Dharma Supremo** e **Aperfeiçoamento** em `livros/ImagensDosLivros`
+      (veja o `LEIA-ME.txt` da pasta `livros`)
 - [ ] `style.css` → mudar as cores, se quiser: tudo está no bloco `:root`,
       nas primeiras linhas do arquivo
 

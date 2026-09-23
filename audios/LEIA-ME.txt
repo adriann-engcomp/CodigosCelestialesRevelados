@@ -1,0 +1,55 @@
+PASTA DOS ÁUDIOS GRAVADOS
+=========================
+
+O site tem DOIS tipos de áudio:
+
+  TIPO 1 - áudio gravado (é esta pasta)
+     Alguém grava o áudio, salva como MP3 (ou WAV) e coloca o arquivo
+     aqui. Ele aparece na seção "Áudios" do site, com um tocador.
+
+  TIPO 2 - leitura automática (não usa esta pasta)
+     É o botão "Escutar áudio" que fica ao lado de cada livro. O próprio
+     navegador lê o livro em voz alta, sem precisar de arquivo nenhum.
+     Só funciona nos livros que têm PDF.
+
+
+COMO ACRESCENTAR UM ÁUDIO GRAVADO
+---------------------------------
+1. Salve o arquivo nesta pasta com um nome assim:
+
+       audio1.mp3
+       audio2.mp3
+       audio3.mp3
+
+   Os três primeiros já estão previstos no site: basta colocar o arquivo
+   com esse nome e ele aparece sozinho.
+
+2. Para o quarto em diante, abra o index.html, procure a seção ÁUDIOS e
+   copie um bloco inteiro que comece com <article class="audio-item">,
+   trocando audio3.mp3 por audio4.mp3 (em DOIS lugares: no src do
+   <audio> e no href do "Baixar áudio").
+
+3. Troque também o título ("Áudio 1") e a linha de descrição pelo
+   assunto real do áudio.
+
+
+REGRA DE OURO PARA O NOME DO ARQUIVO
+------------------------------------
+Só letras minúsculas sem acento, números e hífen. Nada de espaço, nada
+de acento, nada de maiúscula — no site publicado o GitHub diferencia
+maiúscula de minúscula e o espaço vira %20.
+
+
+MP3 OU WAV?
+-----------
+Prefira MP3: toca em todos os navegadores e o arquivo fica muito menor.
+O WAV também funciona (troque .mp3 por .wav nos dois lugares), mas um
+áudio de 10 minutos em WAV passa de 100 MB e não caberia no site.
+
+Limite: 100 MB por arquivo, 1 GB no site inteiro.
+
+
+ENQUANTO O ARQUIVO NÃO ESTÁ AQUI
+--------------------------------
+O cartão do áudio mostra "áudio ainda não enviado", em vez de um
+tocador quebrado. Nada quebra na página.

@@ -5,14 +5,15 @@
    ========================================================= */
 
 :root {
-    --fundo: #0a0e21;
-    --fundo-claro: #111737;
-    --fundo-cartao: #161d42;
-    --dourado: #e0b96a;
-    --dourado-suave: #f0d9a6;
-    --texto: #dfe3f2;
-    --texto-fraco: #a5abc7;
-    --borda: rgba(224, 185, 106, 0.22);
+    /* azul médio no fundo, letra branco puro */
+    --fundo: #14448c;
+    --fundo-claro: #103a7b;
+    --fundo-cartao: #1a53a8;
+    --dourado: #f2d493;
+    --dourado-suave: #fbeccb;
+    --texto: #ffffff;
+    --texto-fraco: rgba(255, 255, 255, 0.85);
+    --borda: rgba(255, 255, 255, 0.28);
     --largura-max: 1120px;
     --fonte-titulo: Georgia, "Times New Roman", serif;
     --fonte-texto: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -57,14 +58,14 @@ a {
     left: 0;
     right: 0;
     z-index: 100;
-    background: rgba(10, 14, 33, 0.82);
+    background: rgba(16, 52, 112, 0.86);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid transparent;
     transition: background 0.3s, border-color 0.3s;
 }
 
 .cabecalho.rolou {
-    background: rgba(10, 14, 33, 0.97);
+    background: rgba(16, 52, 112, 0.98);
     border-bottom-color: var(--borda);
 }
 
@@ -161,30 +162,12 @@ a {
     justify-content: center;
     text-align: center;
     padding: 110px 20px 90px;
-    /* céu estrelado feito só com CSS */
-    background:
-        radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
-        radial-gradient(1.5px 1.5px at 70% 20%, #fff, transparent),
-        radial-gradient(1px 1px at 40% 70%, #fff, transparent),
-        radial-gradient(1.5px 1.5px at 85% 60%, #fff, transparent),
-        radial-gradient(1px 1px at 15% 80%, #fff, transparent),
-        radial-gradient(1px 1px at 55% 45%, #fff, transparent),
-        radial-gradient(1.5px 1.5px at 90% 85%, #fff, transparent),
-        radial-gradient(1px 1px at 33% 15%, #fff, transparent),
-        radial-gradient(ellipse at 50% 40%, rgba(224, 185, 106, 0.13), transparent 60%),
-        linear-gradient(180deg, #070a1a 0%, #0f1533 60%, var(--fundo) 100%);
+    /* sem desenho inicial: só o azul do site */
+    background: var(--fundo);
 }
 
 .capa-conteudo {
     max-width: 760px;
-}
-
-.capa-suptitulo {
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    font-size: 0.78rem;
-    color: var(--dourado);
-    margin-bottom: 22px;
 }
 
 .capa h1 {
@@ -194,7 +177,7 @@ a {
     line-height: 1.15;
     color: #fff;
     margin-bottom: 24px;
-    text-shadow: 0 0 40px rgba(224, 185, 106, 0.25);
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
 }
 
 .capa-texto {
@@ -209,6 +192,48 @@ a {
     gap: 16px;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+/* ===== os dois quadrados para clicar (livros em português / espanhol) ===== */
+
+.capa-quadrados {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 210px));
+    gap: 22px;
+    justify-content: center;
+}
+
+.quadrado {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px;
+    background: var(--fundo-cartao);
+    border: 1px solid var(--borda);
+    border-radius: 3px;
+    transition: transform 0.25s, border-color 0.25s, background 0.25s;
+}
+
+.quadrado:hover {
+    transform: translateY(-5px);
+    border-color: var(--dourado);
+    background: #1e5cba;
+}
+
+.quadrado-icone {
+    font-size: 2.1rem;
+    color: var(--dourado);
+    line-height: 1;
+}
+
+.quadrado-texto {
+    font-family: var(--fonte-titulo);
+    font-size: 1.15rem;
+    color: #fff;
+    line-height: 1.3;
 }
 
 .capa-seta {
@@ -244,7 +269,7 @@ a {
 
 .botao-principal {
     background: var(--dourado);
-    color: #0a0e21;
+    color: #0d3169;
     font-weight: 600;
 }
 
@@ -258,7 +283,7 @@ a {
 }
 
 .botao-secundario:hover {
-    background: rgba(224, 185, 106, 0.1);
+    background: rgba(255, 255, 255, 0.14);
 }
 
 /* ================= SEÇÕES ================= */
@@ -307,22 +332,28 @@ a {
 }
 
 .secao h2 + .texto-duas-colunas,
-.secao h2 + .cartoes-grid,
-.secao h2 + .lista-objetivos,
-.secao h2 + .mensagens-grid,
 .secao h2 + .livros-grid,
+.secao h2 + .audios-grid,
+.secao h2 + .links-grid,
+.secao h2 + .videos-grid,
+.secao h2 + .galeria,
 .secao h2 + .contato-grid {
     margin-top: 34px;
 }
 
-/* texto em duas colunas */
-/* Obs.: o min(...) abaixo impede que a coluna fique mais larga que a tela
-   em celulares estreitos — sem ele o site ganha rolagem horizontal. */
+/* texto em duas colunas: uma frase do lado da outra */
 .texto-duas-colunas {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-    gap: 20px 46px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 46px;
     color: var(--texto-fraco);
+}
+
+/* em tela estreita as frases viram uma coluna só, para não espremer */
+@media (max-width: 720px) {
+    .texto-duas-colunas {
+        grid-template-columns: 1fr;
+    }
 }
 
 .texto-duas-colunas strong {
@@ -352,80 +383,6 @@ a {
     font-size: 0.85rem;
     font-style: italic;
     color: var(--texto-fraco);
-}
-
-/* ================= CARTÕES (quem somos) ================= */
-
-.cartoes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
-    gap: 24px;
-}
-
-.cartao {
-    background: var(--fundo-cartao);
-    border: 1px solid var(--borda);
-    border-radius: 3px;
-    padding: 34px 28px;
-    transition: transform 0.25s, border-color 0.25s;
-}
-
-.cartao:hover {
-    transform: translateY(-5px);
-    border-color: var(--dourado);
-}
-
-.cartao-icone {
-    font-size: 1.8rem;
-    color: var(--dourado);
-    margin-bottom: 14px;
-}
-
-.cartao h3 {
-    font-family: var(--fonte-titulo);
-    font-weight: normal;
-    font-size: 1.25rem;
-    color: #fff;
-    margin-bottom: 10px;
-}
-
-.cartao p {
-    color: var(--texto-fraco);
-    font-size: 0.95rem;
-}
-
-/* ================= OBJETIVOS ================= */
-
-.lista-objetivos {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
-    gap: 34px;
-}
-
-.lista-objetivos li {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-}
-
-.lista-objetivos .numero {
-    font-family: var(--fonte-titulo);
-    font-size: 1.9rem;
-    color: var(--dourado);
-    opacity: 0.55;
-    line-height: 1;
-}
-
-.lista-objetivos h3 {
-    font-size: 1.1rem;
-    color: #fff;
-    margin-bottom: 6px;
-}
-
-.lista-objetivos p {
-    color: var(--texto-fraco);
-    font-size: 0.95rem;
 }
 
 /* ================= GALERIA DE FOTOS ================= */
@@ -475,7 +432,7 @@ a {
     left: 50%;
     transform: translate(-50%, -60%);
     font-size: 2rem;
-    color: rgba(224, 185, 106, 0.45);
+    color: rgba(255, 255, 255, 0.55);
 }
 
 .foto figcaption {
@@ -483,7 +440,7 @@ a {
     padding: 10px 14px;
     font-size: 0.85rem;
     color: var(--texto);
-    background: linear-gradient(transparent, rgba(7, 10, 26, 0.92));
+    background: linear-gradient(transparent, rgba(8, 30, 68, 0.94));
     position: absolute;
     bottom: 0;
     left: 0;
@@ -579,7 +536,7 @@ a {
     height: 62px;
     border-radius: 50%;
     border: 1px solid var(--dourado);
-    background: rgba(224, 185, 106, 0.12);
+    background: rgba(255, 255, 255, 0.16);
     color: var(--dourado);
     font-size: 1.2rem;
     cursor: pointer;
@@ -587,7 +544,7 @@ a {
 }
 
 .video.com-capa .video-play {
-    background: rgba(10, 14, 33, 0.55);
+    background: rgba(16, 52, 112, 0.6);
     backdrop-filter: blur(2px);
 }
 
@@ -598,13 +555,115 @@ a {
 
 .video-play:hover {
     background: var(--dourado);
-    color: #0a0e21;
+    color: #0d3169;
     transform: scale(1.08);
 }
 
 .video-titulo {
     font-size: 0.92rem;
     color: var(--texto-fraco);
+}
+
+/* ================= ÁUDIOS GRAVADOS ================= */
+
+.audios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 24px;
+}
+
+.audio-item {
+    background: var(--fundo-cartao);
+    border: 1px solid var(--borda);
+    border-radius: 3px;
+    padding: 26px 24px;
+}
+
+.audio-item h3 {
+    font-family: var(--fonte-titulo);
+    font-weight: normal;
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 6px;
+}
+
+.audio-descricao {
+    color: var(--texto-fraco);
+    font-size: 0.92rem;
+    margin-bottom: 16px;
+}
+
+.audio-tocador {
+    width: 100%;
+}
+
+.audio-baixar {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 0.85rem;
+    color: var(--dourado);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.audio-baixar:hover {
+    border-bottom-color: var(--dourado);
+}
+
+/* quando o arquivo de áudio ainda não foi enviado para a pasta */
+.audio-item.sem-arquivo .audio-tocador,
+.audio-item.sem-arquivo .audio-baixar {
+    display: none;
+}
+
+.audio-item.sem-arquivo::after {
+    content: "áudio ainda não enviado";
+    display: block;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--texto-fraco);
+}
+
+/* ================= OUTRAS PÁGINAS E LINKS ================= */
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+    gap: 20px;
+}
+
+.link-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 26px 24px;
+    background: var(--fundo-cartao);
+    border: 1px solid var(--borda);
+    border-radius: 3px;
+    transition: border-color 0.25s, transform 0.25s;
+}
+
+.link-item:hover {
+    border-color: var(--dourado);
+    transform: translateY(-4px);
+}
+
+.link-icone {
+    font-size: 1.4rem;
+    color: var(--dourado);
+    line-height: 1;
+}
+
+.link-nome {
+    font-family: var(--fonte-titulo);
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.link-endereco {
+    font-size: 0.86rem;
+    color: var(--texto-fraco);
+    word-break: break-all;
 }
 
 /* ================= MENSAGENS ================= */
@@ -676,7 +735,7 @@ a {
     content: "✦";
     position: absolute;
     font-size: 1.6rem;
-    color: rgba(224, 185, 106, 0.45);
+    color: rgba(255, 255, 255, 0.55);
 }
 
 .livro-capa img {
@@ -731,13 +790,15 @@ a {
     border-bottom-color: var(--dourado);
 }
 
-/* ========== LEITOR DE PDF NA PRÓPRIA PÁGINA ========== */
+/* ========== LEITOR DE PDF NA PRÓPRIA PÁGINA ==========
+   Abre por cima da página, para servir às duas seções de livros. */
 
 .leitor-pdf {
-    margin-top: 30px;
-    border: 1px solid var(--borda);
-    border-radius: 3px;
-    overflow: hidden;
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
     background: var(--fundo-cartao);
 }
 
@@ -785,10 +846,12 @@ a {
 /* área de leitura: rola da primeira até a última página */
 .leitor-palco {
     padding: 16px;
-    height: 78vh;
+    flex: 1;
+    /* sem isto o flex não deixa a área rolar */
+    min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    background: #0c1026;
+    background: #0d3169;
     /* a rolagem para de "vazar" para a página quando chega ao fim */
     overscroll-behavior: contain;
 }
@@ -842,7 +905,7 @@ a {
 }
 
 .leitor-nav:hover:not(:disabled) {
-    background: rgba(224, 185, 106, 0.12);
+    background: rgba(255, 255, 255, 0.16);
 }
 
 .leitor-nav:disabled {
@@ -876,10 +939,68 @@ a {
     }
 }
 
+/* ========== BARRA DA LEITURA AUTOMÁTICA (escutar áudio) ==========
+   Aparece no pé da tela enquanto o livro está sendo lido em voz alta. */
+
+.barra-audio {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 310;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    padding: 14px 20px;
+    background: rgba(13, 49, 105, 0.98);
+    border-top: 1px solid var(--borda);
+}
+
+.barra-audio[hidden] {
+    display: none;
+}
+
+.barra-audio-titulo {
+    flex: 1 1 200px;
+    font-size: 0.92rem;
+    color: #fff;
+}
+
+.barra-audio-estado {
+    font-size: 0.85rem;
+    color: var(--texto-fraco);
+}
+
+.barra-audio-botao {
+    background: none;
+    border: 1px solid var(--borda);
+    border-radius: 2px;
+    color: var(--dourado);
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.barra-audio-botao:hover {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+/* enquanto a barra está na tela, o botão de voltar ao topo sobe um pouco */
+body.lendo-em-voz .voltar-topo {
+    bottom: 84px;
+}
+
+/* enquanto o leitor de PDF está aberto, a página de trás não rola */
+body.leitor-aberto {
+    overflow: hidden;
+}
+
 /* ================= CONTATO ================= */
 
 .secao-contato {
-    background: linear-gradient(180deg, var(--fundo) 0%, #0d1230 100%);
+    background: linear-gradient(180deg, var(--fundo) 0%, #0d3169 100%);
     text-align: center;
 }
 
@@ -971,7 +1092,7 @@ a.contato-item:hover {
 
 .voltar-topo:hover {
     background: var(--dourado);
-    color: #0a0e21;
+    color: #0d3169;
 }
 
 /* ================= APARIÇÃO SUAVE AO ROLAR ================= */
@@ -988,10 +1109,10 @@ a.contato-item:hover {
 }
 
 /* ================= CELULAR / TABLET =================
-   Até 1024px o menu vira hambúrguer. Abaixo disso os 8 itens
+   Até 1180px o menu vira hambúrguer. Abaixo disso os 9 itens
    do menu não cabem ao lado do título sem se espremerem. */
 
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
 
     html {
         scroll-padding-top: 74px;
@@ -1017,7 +1138,7 @@ a.contato-item:hover {
         top: 100%;
         left: 0;
         right: 0;
-        background: rgba(10, 14, 33, 0.98);
+        background: rgba(16, 52, 112, 0.99);
         border-bottom: 1px solid transparent;
         max-height: 0;
         overflow: hidden;
@@ -1081,12 +1202,6 @@ a.contato-item:hover {
         padding: 96px 18px 76px;
     }
 
-    .capa-suptitulo {
-        letter-spacing: 2.5px;
-        font-size: 0.68rem;
-        margin-bottom: 16px;
-    }
-
     .capa h1 {
         font-size: 2rem;
         margin-bottom: 18px;
@@ -1118,22 +1233,6 @@ a.contato-item:hover {
 
     .secao h2::after {
         margin-top: 14px;
-    }
-
-    .cartao {
-        padding: 26px 22px;
-    }
-
-    .lista-objetivos {
-        gap: 26px;
-    }
-
-    .lista-objetivos li {
-        gap: 14px;
-    }
-
-    .lista-objetivos .numero {
-        font-size: 1.5rem;
     }
 
     .galeria {
@@ -1188,10 +1287,6 @@ a.contato-item:hover {
     .capa {
         min-height: auto;
         padding: 88px 20px 56px;
-    }
-
-    .capa-suptitulo {
-        margin-bottom: 12px;
     }
 
     .capa h1 {
