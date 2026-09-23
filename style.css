@@ -765,17 +765,31 @@ a {
 
 /* ========== BOTÕES DOS LIVROS ========== */
 
+/* Os botões ficam numa grade: mesma largura, e o "grid-auto-rows: 1fr"
+   dá a MESMA ALTURA a todos, mesmo quando um texto quebra em duas linhas. */
 .livro-acoes {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 10px;
     margin-top: 18px;
 }
 
 .livro-acoes .botao {
-    padding: 11px 22px;
-    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 46px;
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    letter-spacing: 0.5px;
+}
+
+/* o "Solicitar exemplar" é um link de texto, não ocupa a linha inteira */
+.livro-acoes .livro-link {
+    align-self: center;
+    justify-self: start;
 }
 
 .livro-link {
@@ -925,18 +939,6 @@ a {
     text-align: center;
     color: var(--texto-fraco);
     font-size: 0.95rem;
-}
-
-@media (max-width: 480px) {
-
-    .livro-acoes {
-        gap: 10px;
-    }
-
-    .livro-acoes .botao {
-        flex: 1 1 100%;
-        text-align: center;
-    }
 }
 
 /* ========== BARRA DA LEITURA AUTOMÁTICA (escutar áudio) ==========
