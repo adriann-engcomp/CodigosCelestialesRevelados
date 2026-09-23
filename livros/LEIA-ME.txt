@@ -26,7 +26,7 @@ porque o PDF ainda não chegou. Dois deles ainda não têm nem capa
 (Dharma Supremo e Aperfeiçoamento) e mostram uma estrela no lugar.
 
 
-REGRA DE OURO PARA O NOME DO ARQUIVO
+NOME DO ARQUIVO
 ------------------------------------
 Só letras minúsculas sem acento, números e hífen. Nada de espaço,
 nada de acento, nada de maiúscula.

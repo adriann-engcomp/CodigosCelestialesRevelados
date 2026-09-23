@@ -1049,6 +1049,189 @@ a.contato-item:hover {
     font-size: 0.98rem;
 }
 
+/* ================= PÁGINA DE PEDIDOS (recados.html) =================
+   Usa as mesmas cores e fontes do site; só o que é do formulário
+   está aqui embaixo. */
+
+.pagina-recados {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.pagina-recados main {
+    flex: 1;
+    padding-top: 130px;
+}
+
+.voltar-site {
+    font-size: 0.88rem;
+    color: var(--dourado);
+    border-bottom: 1px solid transparent;
+    white-space: nowrap;
+    transition: border-color 0.2s;
+}
+
+.voltar-site:hover {
+    border-bottom-color: var(--dourado);
+}
+
+.recados-interna {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.pagina-recados h1 {
+    font-family: var(--fonte-titulo);
+    font-weight: normal;
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    color: #fff;
+    margin-bottom: 12px;
+}
+
+.recados-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.recados-formulario[hidden] {
+    display: none;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo-titulo {
+    font-size: 0.92rem;
+    color: #fff;
+}
+
+.campo-opcional {
+    color: var(--texto-fraco);
+    font-size: 0.84rem;
+}
+
+.campo-ajuda {
+    font-size: 0.84rem;
+    color: var(--texto-fraco);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #fff;
+    background: var(--fundo-cartao);
+    border: 1px solid var(--borda);
+    border-radius: 3px;
+    padding: 12px 14px;
+    width: 100%;
+    transition: border-color 0.2s;
+}
+
+.campo textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+/* a setinha do "escolher" some em fundo escuro em alguns navegadores */
+.campo select option {
+    color: #fff;
+    background: #123f84;
+}
+
+.campo input::placeholder,
+.campo textarea::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    outline: none;
+    border-color: var(--dourado);
+}
+
+/* a armadilha para robôs não pode aparecer nem ser alcançada pelo teclado */
+input[name="_gotcha"] {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.recados-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+.recados-estado {
+    font-size: 0.9rem;
+    color: var(--texto-fraco);
+}
+
+.recados-estado.erro {
+    color: var(--dourado-suave);
+}
+
+.recados-socorro {
+    color: var(--dourado);
+    border-bottom: 1px solid var(--dourado);
+}
+
+.recados-pronto {
+    text-align: center;
+    padding: 46px 28px;
+    background: var(--fundo-cartao);
+    border: 1px solid var(--borda);
+    border-radius: 3px;
+}
+
+.recados-pronto[hidden] {
+    display: none;
+}
+
+.recados-pronto-simbolo {
+    font-size: 1.8rem;
+    color: var(--dourado);
+    margin-bottom: 10px;
+}
+
+.recados-pronto h2 {
+    font-family: var(--fonte-titulo);
+    font-weight: normal;
+    font-size: 1.6rem;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.recados-pronto p {
+    color: var(--texto-fraco);
+    margin-bottom: 24px;
+}
+
+@media (max-width: 480px) {
+
+    .pagina-recados main {
+        padding-top: 110px;
+    }
+
+    .recados-acoes .botao {
+        width: 100%;
+        text-align: center;
+    }
+}
+
 /* ================= RODAPÉ ================= */
 
 .rodape {

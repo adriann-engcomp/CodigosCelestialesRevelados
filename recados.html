@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos de mudança — Códigos Celestiais Revelados</title>
+
+    <!-- Esta página é particular: não entra no menu do site, não está no
+         sitemap e a linha abaixo pede ao Google que não a mostre nas buscas.
+         Só chega aqui quem receber o endereço de você. -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#14448c">
+
+    <link rel="stylesheet" href="style.css?v=12">
+</head>
+
+<body class="pagina-recados">
+
+    <!-- ================= CABEÇALHO ================= -->
+    <header class="cabecalho rolou">
+        <div class="cabecalho-interno">
+            <a href="index.html" class="logo">
+                <span class="logo-icone">✦</span>
+                <span class="logo-texto">Códigos Celestiais Revelados</span>
+            </a>
+            <a href="index.html" class="voltar-site">Ver o site</a>
+        </div>
+    </header>
+
+    <main class="secao">
+        <div class="recados-interna">
+
+            <p class="secao-etiqueta">Pedidos de mudança</p>
+            <h1>O que você quer mudar no site?</h1>
+            <p class="secao-subtexto">
+                Diga em que parte do site é e o que deve ficar diferente — pode ser
+                um texto, uma imagem, um livro, um áudio, qualquer coisa.
+            </p>
+
+            <!-- ================================================================
+                 ANTES DE PUBLICAR, LEIA ISTO
+
+                 O site é feito só de arquivos, não tem um programa por trás para
+                 receber o texto. Quem recebe e te manda por e-mail é o Formspree,
+                 que é gratuito para até 50 mensagens por mês.
+
+                 1. Entre em https://formspree.io e crie a conta com o SEU e-mail.
+                 2. Clique em "New form", dê o nome "Códigos Celestiais" e salve.
+                 3. Ele mostra um endereço assim:
+                        https://formspree.io/f/abcdwxyz
+                    O pedaço final (abcdwxyz) é o seu código.
+                 4. Troque COLE_AQUI_O_CODIGO_DO_FORMSPREE, logo abaixo, por esse
+                    código. Não mexa em mais nada.
+                 5. Mande uma mensagem de teste por esta página. Na primeira vez o
+                    Formspree pede que você confirme o e-mail — confirme e pronto.
+
+                 Enquanto o código não estiver aqui, a página avisa em português
+                 em vez de fingir que enviou.
+                 ================================================================ -->
+            <form class="recados-formulario" id="formulario"
+                  action="https://formspree.io/f/mbglyadz" method="POST">
+
+                <label class="campo">
+                    <span class="campo-titulo">Seu nome</span>
+                    <input type="text" name="nome" required autocomplete="name">
+                </label>
+
+                <label class="campo">
+                    <span class="campo-titulo">Seu e-mail ou WhatsApp <span class="campo-opcional">(opcional)</span></span>
+                    <input type="text" name="contato" autocomplete="email">
+                </label>
+
+                <label class="campo">
+                    <span class="campo-titulo">Em que parte do site</span>
+                    <select name="parte">
+                        <option>Tela inicial</option>
+                        <option>Apresentação</option>
+                        <option>Livros em português</option>
+                        <option>Livros em espanhol</option>
+                        <option>Áudios</option>
+                        <option>Vídeos</option>
+                        <option>Entrevistas</option>
+                        <option>Outras páginas e links</option>
+                        <option>Galeria de imagens</option>
+                        <option>Contato</option>
+                        <option>O site inteiro</option>
+                        <option>Ainda não sei</option>
+                    </select>
+                </label>
+
+                <label class="campo">
+                    <span class="campo-titulo">O que é para fazer</span>
+                    <select name="tipo">
+                        <option>Trocar um texto</option>
+                        <option>Trocar ou acrescentar uma imagem</option>
+                        <option>Acrescentar uma coisa nova</option>
+                        <option>Tirar uma coisa</option>
+                        <option>Mudar de lugar</option>
+                        <option>Corrigir um erro</option>
+                        <option>Outro</option>
+                    </select>
+                </label>
+
+                <label class="campo">
+                    <span class="campo-titulo">Escreva o pedido</span>
+                    <textarea name="mensagem" rows="9" required
+                            placeholder="Exemplo: na tela inicial, trocar a frase de baixo por esta: …"></textarea>
+                </label>
+
+                <!-- Assunto do e-mail que chega para você -->
+                <input type="hidden" name="_subject" value="Pedido de mudança no site Códigos Celestiais">
+
+                <!-- Armadilha para robôs de propaganda: gente não vê, nem preenche -->
+                <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+                <div class="recados-acoes">
+                    <button type="submit" class="botao botao-principal" id="botaoEnviar">Enviar o pedido</button>
+                    <span class="recados-estado" id="estado"></span>
+                </div>
+
+            </form>
+
+            <!-- Aparece no lugar do formulário quando a mensagem vai embora -->
+            <div class="recados-pronto" id="pronto" hidden>
+                <p class="recados-pronto-simbolo">✦</p>
+                <h2>Recebido, obrigado!</h2>
+                <p>O pedido já está a caminho. Pode mandar outro sempre que quiser.</p>
+                <button type="button" class="botao botao-secundario" id="botaoOutro">Escrever outro pedido</button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="rodape">
+        <p class="rodape-simbolo">✦</p>
+        <p>&copy; 2026 Códigos Celestiais Revelados.</p>
+    </footer>
+
+    <script src="recados.js?v=2"></script>
+</body>
+
+</html>

@@ -13,6 +13,8 @@ estilo de construção do EncantosDoLar.
 | `imagens/` | Onde ficam as fotos da galeria (veja o `LEIA-ME.txt` lá dentro) |
 | `livros/` | Os livros em PDF e as capas (veja o `LEIA-ME.txt` lá dentro) |
 | `audios/` | Os áudios gravados em MP3 (veja o `LEIA-ME.txt` lá dentro) |
+| `recados.html` | Página particular onde o cliente escreve os pedidos de mudança |
+| `recados.js` | O envio dessa página |
 
 ## Para ver o site no seu computador
 
@@ -90,6 +92,38 @@ https://adriann-engcomp.github.io/CodigosCelestialesRevelados/
       (veja o `LEIA-ME.txt` da pasta `livros`)
 - [ ] `style.css` → mudar as cores, se quiser: tudo está no bloco `:root`,
       nas primeiras linhas do arquivo
+
+## A página de pedidos de mudança
+
+O `recados.html` é uma página à parte, **fora do menu**: ela não aparece no
+site, não está no `sitemap.xml` e pede ao Google para não indexá-la. Só chega
+lá quem receber o endereço de você:
+
+```
+https://adriann-engcomp.github.io/CodigosCelestialesRevelados/recados.html
+```
+
+O cliente escreve o pedido ali e você recebe por e-mail. Como o site é feito só
+de arquivos (não tem um programa por trás), quem recebe o texto e te manda o
+e-mail é o **Formspree**, gratuito para até 50 mensagens por mês.
+
+**Para ligar a página ao seu e-mail (uma vez só):**
+
+1. Entre em <https://formspree.io> e crie a conta com o seu e-mail.
+2. Clique em **New form**, dê o nome "Códigos Celestiais" e salve.
+3. Ele mostra um endereço assim: `https://formspree.io/f/abcdwxyz`.
+   O pedaço final (`abcdwxyz`) é o seu código.
+4. Abra o `recados.html`, procure por `COLE_AQUI_O_CODIGO_DO_FORMSPREE` e
+   troque por esse código. Não mexa em mais nada.
+5. Mande uma mensagem de teste pela página. Na primeira vez o Formspree pede
+   que você confirme o e-mail — confirme e está pronto.
+
+Enquanto o código não estiver lá, a página avisa em português em vez de fingir
+que enviou. E se o envio falhar (internet caiu, serviço fora do ar), ela oferece
+um link que abre o e-mail com o pedido já escrito — ninguém perde o texto.
+
+> O link de emergência usa o `seuemail@exemplo.com` do `recados.js`: troque pelo
+> seu e-mail de verdade, junto com os da seção de contato.
 
 ## Aparecer no Google
 

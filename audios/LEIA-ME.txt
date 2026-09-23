@@ -33,7 +33,7 @@ COMO ACRESCENTAR UM ÁUDIO GRAVADO
    assunto real do áudio.
 
 
-REGRA DE OURO PARA O NOME DO ARQUIVO
+NOME DO ARQUIVO
 ------------------------------------
 Só letras minúsculas sem acento, números e hífen. Nada de espaço, nada
 de acento, nada de maiúscula — no site publicado o GitHub diferencia
@@ -49,7 +49,7 @@ O WAV também funciona (troque .mp3 por .wav nos dois lugares), mas um
 Limite: 100 MB por arquivo, 1 GB no site inteiro.
 
 
-ENQUANTO O ARQUIVO NÃO ESTÁ AQUI
+Se o audio nao existe
 --------------------------------
 O cartão do áudio mostra "áudio ainda não enviado", em vez de um
 tocador quebrado. Nada quebra na página.
