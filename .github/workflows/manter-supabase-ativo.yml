@@ -1,0 +1,66 @@
+# =====================================================================
+# Mantém o projeto do Supabase acordado.
+#
+# No plano gratuito o Supabase pausa o projeto depois de uma semana sem
+# nenhum acesso, e aí a parte de conteúdo do site para de carregar. Este
+# trabalho faz uma consulta mínima ao banco uma vez por dia, o que conta
+# como acesso e evita a pausa.
+#
+# De quebra, ele serve de vigia: se a consulta falhar, o GitHub manda um
+# e-mail avisando que alguma coisa está errada com o banco.
+#
+# Roda no GitHub, de graça, sem precisar de servidor nenhum.
+# =====================================================================
+
+name: Manter o Supabase ativo
+
+on:
+  schedule:
+    # todo dia às 11:00 UTC, que é 08:00 em Brasília
+    - cron: "0 11 * * *"
+  # permite rodar na mão pelo botão "Run workflow", para testar
+  workflow_dispatch:
+
+jobs:
+  consultar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fazer uma consulta mínima ao banco
+        env:
+          URL: ${{ secrets.SUPABASE_URL }}
+          CHAVE: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+          CHAVE_ANTIGA: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          # O Supabase renomeou as chaves: a "anon public" virou
+          # "publishable". Aceita as duas, para funcionar nos dois casos.
+          if [ -z "$CHAVE" ]; then
+            CHAVE="$CHAVE_ANTIGA"
+          fi
+
+          if [ -z "$URL" ] || [ -z "$CHAVE" ]; then
+            echo "Faltam os segredos SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY."
+            echo "Cadastre em: Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+          # tira a barra do fim, caso tenha sido colada junto com o endereço
+          URL="${URL%/}"
+
+          # pede uma linha só, o mínimo para o Supabase registrar o acesso
+          codigo=$(curl -s -o resposta.txt -w "%{http_code}" \
+            -H "apikey: $CHAVE" \
+            "$URL/rest/v1/conteudos?select=tipo&limit=1")
+
+          echo "Resposta do Supabase: $codigo"
+          cat resposta.txt
+
+          if [ "$codigo" != "200" ]; then
+            echo ""
+            echo "FALHOU. O que costuma ser:"
+            echo "  401 ou 403 -> a chave esta errada, ou as regras de acesso nao foram criadas"
+            echo "  404        -> a tabela conteudos nao existe: rode o supabase/esquema.sql"
+            echo "  000        -> o endereco esta errado, ou o projeto foi apagado"
+            exit 1
+          fi
+
+          echo "Tudo certo: o projeto esta ativo."

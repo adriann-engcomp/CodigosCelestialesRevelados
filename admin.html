@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de conteúdo — Códigos Celestiais Revelados</title>
+
+    <!-- Esta página é só para quem administra: não entra no menu do
+         site, não está no sitemap e a linha abaixo pede ao Google que
+         não a mostre nas buscas. -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#1a4fa0">
+
+    <link rel="stylesheet" href="style.css?v=16">
+</head>
+
+<body class="pagina-admin">
+
+    <header class="cabecalho rolou">
+        <div class="cabecalho-interno">
+            <a href="index.html" class="logo">
+                <span class="logo-icone">✦</span>
+                <span class="logo-texto">Painel de conteúdo</span>
+            </a>
+            <div class="admin-usuario">
+                <span class="admin-email" id="adminEmail"></span>
+                <button class="voltar-site" id="botaoSair" hidden>Sair</button>
+                <a href="index.html" class="voltar-site">Ver o site</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-main">
+
+        <!-- ============ 1. AINDA NÃO ENTROU ============ -->
+        <section class="admin-caixa" id="telaEntrar">
+            <h1>Painel de conteúdo</h1>
+            <p class="admin-texto">
+                Aqui você escreve o título e a descrição de cada áudio, vídeo e texto do
+                site, e envia as imagens e os PDFs. Entre com a conta do Google que foi
+                cadastrada.
+            </p>
+            <button class="botao botao-principal" id="botaoEntrar">Entrar com Google</button>
+            <p class="admin-aviso" id="avisoEntrar"></p>
+        </section>
+
+        <!-- ============ 2. ENTROU, MAS NÃO TEM PERMISSÃO ============ -->
+        <section class="admin-caixa" id="telaSemPermissao" hidden>
+            <h1>Conta sem permissão</h1>
+            <p class="admin-texto">
+                Você entrou, mas esta conta não está na lista de administradores. Peça a
+                quem cuida do site para acrescentar o seu e-mail.
+            </p>
+            <button class="botao botao-secundario" id="botaoSairOutra">Entrar com outra conta</button>
+        </section>
+
+        <!-- ============ 3. O EDITOR ============ -->
+        <section id="telaEditor" hidden>
+
+            <nav class="admin-abas" id="abas">
+                <button class="admin-aba ativa" data-tipo="audio">Áudios</button>
+                <button class="admin-aba" data-tipo="video">Vídeos</button>
+                <button class="admin-aba" data-tipo="tema">Temas e resumos</button>
+            </nav>
+
+            <p class="admin-estado" id="estado"></p>
+
+            <div class="admin-lista" id="lista"></div>
+
+        </section>
+
+    </main>
+
+    <!-- A biblioteca do Supabase, numa versão fixa: assim uma
+         atualização dela não quebra o painel de surpresa. -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+    <script src="js/config.js?v=1"></script>
+    <script src="js/admin.js?v=1"></script>
+</body>
+
+</html>

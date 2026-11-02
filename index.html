@@ -26,7 +26,7 @@
 
     <!-- NAO APAGUE esta linha: e ela que carrega toda a formatacao do site.
         O "?v=14" faz o navegador buscar a versao nova em vez da guardada. -->
-    <link rel="stylesheet" href="style.css?v=15">
+    <link rel="stylesheet" href="style.css?v=16">
 
     <!-- Ficha do site para o Google -->
     <script type="application/ld+json">
@@ -707,8 +707,15 @@
 
     <!-- Lista dos áudios, vídeos e temas. É AQUI que se escreve o título e a
          descrição de cada um. Precisa vir antes do script.js. -->
-    <script src="conteudos.js?v=1"></script>
-    <script src="script.js?v=11"></script>
+    <script src="conteudos.js?v=2"></script>
+    <script src="script.js?v=12"></script>
+
+    <!-- Busca no painel o que foi escrito pelo admin e redesenha as três
+         seções. Precisa vir DEPOIS do script.js. Se o painel não estiver
+         ligado, ou o Supabase estiver fora do ar, nada acontece e fica o
+         conteúdo do conteudos.js. -->
+    <script src="js/config.js?v=1"></script>
+    <script src="js/conteudo-remoto.js?v=1"></script>
 </body>
 
 </html>

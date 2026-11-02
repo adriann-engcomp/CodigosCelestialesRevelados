@@ -155,7 +155,12 @@ function mostrarMiniatura(caixa, id) {
     caixa.insertBefore(capa, caixa.firstChild);
 }
 
-document.querySelectorAll(".video").forEach((caixa) => {
+function ligarVideos() {
+    document.querySelectorAll(".video").forEach((caixa) => {
+    // já ligado antes: não liga duas vezes no mesmo
+    if (caixa.dataset.ligado) return;
+    caixa.dataset.ligado = "1";
+
     const idDaCaixa = extrairIdDoYoutube(caixa.dataset.video);
     if (idDaCaixa) mostrarMiniatura(caixa, idDaCaixa);
 
@@ -176,7 +181,10 @@ document.querySelectorAll(".video").forEach((caixa) => {
         caixa.innerHTML = "";
         caixa.appendChild(iframe);
     });
-});
+    });
+}
+
+ligarVideos();
 
 /* ---------- 6. Imagens que ainda não existem na pasta ----------
    Enquanto o arquivo .jpg não for colocado em "imagens/", o site
@@ -220,6 +228,17 @@ const observador = new IntersectionObserver(
 );
 
 alvos.forEach((el) => observador.observe(el));
+
+/* Estas duas são preenchidas mais abaixo, quando o leitor de PDF e a
+   leitura em voz alta são montados. Ficam aqui em cima para o
+   conteudo-remoto.js poder chamá-las depois de refazer os cartões. */
+let ligarAbrirPdf = function () {};
+let ligarEscutarAudio = function () {};
+
+function ligarBotoesDeLivro() {
+    ligarAbrirPdf();
+    ligarEscutarAudio();
+}
 
 /* ---------- 8. Leitor de PDF dos livros ----------
 
@@ -466,13 +485,20 @@ if (leitor && window.pdfjsLib) {
         }, 300);
     });
 
-    document.querySelectorAll(".abrir-pdf").forEach((botao) => {
-        botao.addEventListener("click", () => {
-            const dono = botao.closest(".livro, .item");
-            const titulo = dono ? dono.querySelector("h3").textContent : "Documento";
-            abrirLeitor(botao.dataset.pdf, titulo);
+    ligarAbrirPdf = function () {
+        document.querySelectorAll(".abrir-pdf").forEach((botao) => {
+            if (botao.dataset.ligado) return;
+            botao.dataset.ligado = "1";
+
+            botao.addEventListener("click", () => {
+                const dono = botao.closest(".livro, .item");
+                const titulo = dono ? dono.querySelector("h3").textContent : "Documento";
+                abrirLeitor(botao.dataset.pdf, titulo);
+            });
         });
-    });
+    };
+
+    ligarAbrirPdf();
 }
 
 /* ---------- 9. Áudios gravados que ainda não estão na pasta ----------
@@ -735,15 +761,22 @@ if (barraAudio && window.speechSynthesis) {
     // sair da página sem deixar a voz falando sozinha
     window.addEventListener("beforeunload", () => voz.cancel());
 
-    document.querySelectorAll(".escutar-audio").forEach((botao) => {
-        botao.addEventListener("click", () => {
-            if (botaoAtual === botao) {
-                pararLeitura();
-            } else {
-                iniciarLeitura(botao);
-            }
+    ligarEscutarAudio = function () {
+        document.querySelectorAll(".escutar-audio").forEach((botao) => {
+            if (botao.dataset.ligado) return;
+            botao.dataset.ligado = "1";
+
+            botao.addEventListener("click", () => {
+                if (botaoAtual === botao) {
+                    pararLeitura();
+                } else {
+                    iniciarLeitura(botao);
+                }
+            });
         });
-    });
+    };
+
+    ligarEscutarAudio();
 
 } else {
     // navegador sem leitura em voz alta: o botão avisa em vez de não fazer nada

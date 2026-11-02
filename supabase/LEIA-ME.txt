@@ -1,0 +1,221 @@
+PAINEL DE ADMINISTRAÇÃO — O QUE VOCÊ PRECISA FAZER
+==================================================
+
+Esta pasta não faz parte do site: são as instruções e o arquivo de banco
+de dados do painel onde você, o Juan e o Allan vão escrever o conteúdo.
+
+São 5 passos, uns 25 minutos no total. Faça na ordem. No fim do passo 4
+você me manda duas linhas de texto e eu ligo o site no painel.
+
+Tudo o que está aqui é gratuito e não pede cartão.
+
+
+---------------------------------------------------------------------
+PASSO 1 — CRIAR O PROJETO NO SUPABASE  (uns 5 minutos)
+---------------------------------------------------------------------
+
+1. Entre em https://supabase.com e clique em "Start your project".
+   Pode entrar com a sua conta do GitHub, é mais rápido.
+
+2. Clique em "New project" e preencha:
+
+       Name              codigos-celestiais
+       Database Password  gere uma senha e GUARDE num lugar seguro
+       Region             South America (São Paulo)
+
+   A região importa: quanto mais perto, mais rápido o site carrega.
+
+3. Espere uns 2 minutos enquanto ele monta o projeto.
+
+IMPORTANTE: no plano gratuito, se o projeto passar UMA SEMANA sem
+ninguém acessar, ele é pausado e a parte de conteúdo do site para de
+carregar até alguém reativar pelo painel do Supabase.
+
+Isso já está resolvido: o passo 5 deste guia liga uma verificação
+automática que consulta o banco todo dia de manhã, e com isso o projeto
+nunca fica uma semana parado.
+
+
+---------------------------------------------------------------------
+PASSO 2 — CRIAR AS TABELAS  (uns 3 minutos)
+---------------------------------------------------------------------
+
+1. No menu da esquerda, clique em "SQL Editor".
+
+2. Clique em "New query".
+
+3. Abra o arquivo esquema.sql (está nesta mesma pasta), copie TUDO e
+   cole na janela.
+
+4. ANTES de rodar, ache estas três linhas, lá no começo:
+
+       ('troque-pelo-email-do-adrian@gmail.com', 'Adrian'),
+       ('troque-pelo-email-do-juan@gmail.com',   'Juan'),
+       ('troque-pelo-email-do-allan@gmail.com',  'Allan')
+
+   Troque pelos e-mails do Google de verdade dos três. Precisa ser
+   exatamente o e-mail com que cada um vai entrar.
+
+5. Clique em "Run" (ou Ctrl+Enter).
+
+6. No fim deve aparecer uma tabelinha assim:
+
+       tipo    espacos
+       audio   36
+       tema    36
+       video   36
+
+   Se aparecer isso, deu certo.
+
+
+---------------------------------------------------------------------
+PASSO 3 — LIGAR O LOGIN COM GOOGLE  (uns 10 minutos)
+---------------------------------------------------------------------
+
+Esta é a parte mais chata, porque envolve dois sites. Faça com calma.
+
+PARTE A — no Supabase, pegar o endereço de retorno
+
+1. No menu da esquerda: "Authentication" -> "Sign In / Providers".
+2. Ache "Google" na lista e clique.
+3. Copie o endereço que aparece em "Callback URL (for OAuth)".
+   É algo como:
+
+       
+   Deixe essa aba aberta, você volta nela.
+
+PARTE B — no Google, criar a credencial
+
+4. Entre em https://console.cloud.google.com
+5. No topo, crie um projeto novo (nome: Codigos Celestiais).
+6. No menu: "APIs e serviços" -> "Tela de permissão OAuth".
+       - Tipo de usuário: Externo
+       - Nome do app: Códigos Celestiais Revelados
+       - E-mail de suporte e de contato: o seu
+       - Em "Usuários de teste", acrescente os 3 e-mails
+       - Salve
+
+7. No menu: "APIs e serviços" -> "Credenciais"
+       - "Criar credenciais" -> "ID do cliente OAuth"
+       - Tipo: Aplicativo da Web
+       - Nome: Supabase
+       - Em "URIs de redirecionamento autorizados", clique em
+         "Adicionar URI" e cole o endereço que você copiou no passo 3
+       - Criar
+
+8. Ele mostra "ID do cliente" e "Chave secreta do cliente".
+   Deixe essa janela aberta.
+
+PARTE C — juntar os dois
+
+9. Volte na aba do Supabase (Authentication -> Google):
+       - Ligue a chavinha "Enable Sign in with Google"
+       - Cole o ID do cliente em "Client ID"
+       - Cole a chave secreta em "Client Secret"
+       - Salve
+
+10. Ainda em Authentication, vá em "URL Configuration" e preencha:
+
+       Site URL
+           https://adriann-engcomp.github.io/CodigosCelestialesRevelados/
+
+       Redirect URLs (clique em "Add URL" para cada um)
+           https://adriann-engcomp.github.io/CodigosCelestialesRevelados/admin.html
+           http://localhost:8777/admin.html
+
+    O segundo é para eu conseguir testar aqui na sua máquina.
+
+
+---------------------------------------------------------------------
+PASSO 4 — ME MANDAR AS DUAS LINHAS
+---------------------------------------------------------------------
+
+1. No menu da esquerda: "Project Settings" -> "API Keys".
+
+2. A tela mostra DOIS blocos. Preste atenção em qual é qual:
+
+       Publishable key    ESTA eu preciso. Começa com "sb_publishable_".
+                          A própria tela diz: "safe to use in a browser
+                          if you have enabled Row Level Security" — e o
+                          esquema.sql ligou essa proteção em tudo.
+
+       Secret keys        ESTA eu NUNCA preciso. Começa com "sb_secret_".
+                          Dá acesso total e passa por cima de todas as
+                          regras. Não mande para mim nem para ninguém,
+                          não cole em conversa, não ponha em arquivo.
+
+3. Copie e me mande apenas estes dois:
+
+       Project URL        https://xxxxxxxx.supabase.co
+       Publishable key    sb_publishable_rKXzL1g2Nvw_bpZ8FlSWqQ_ihULMp2A
+
+PODE MANDAR SEM MEDO: essas duas são públicas de propósito e ficam
+visíveis no código do site — é assim que tem de ser num site estático.
+Quem manda na segurança são as regras que o esquema.sql criou: mesmo com
+as duas na mão, quem não estiver na tabela de admins não salva nada.
+
+OBSERVAÇÃO: se a tela mostrar um aviso de que as chaves antigas serão
+aposentadas em 2027, e ainda houver uma aba "Legacy API keys" com a
+"anon public" (aquela comprida, começando com "eyJ"), ignore a antiga e
+use a Publishable. As duas funcionam hoje, mas a antiga tem prazo.
+
+NUNCA me mande a senha do banco de dados também.
+
+
+---------------------------------------------------------------------
+PASSO 5 — LIGAR A VERIFICAÇÃO DIÁRIA  (uns 2 minutos)
+---------------------------------------------------------------------
+
+Isto é o que impede o projeto de ser pausado por falta de uso. Já deixei
+pronto o arquivo que faz a consulta; falta só dizer ao GitHub quais são
+o endereço e a chave.
+
+1. Entre no repositório no GitHub e vá em:
+
+       Settings -> Secrets and variables -> Actions
+
+2. Clique em "New repository secret" e cadastre DOIS, um de cada vez:
+
+       Name    SUPABASE_URL
+       Secret  o Project URL do passo 4
+
+       Name    SUPABASE_PUBLISHABLE_KEY
+       Secret  a Publishable key do passo 4 (sb_publishable_...)
+
+3. Vá na aba "Actions", clique em "Manter o Supabase ativo" na lista da
+   esquerda e depois em "Run workflow" para testar na hora.
+
+4. Se aparecer um visto verde, está funcionando. Daí em diante ele roda
+   sozinho todo dia às 8 da manhã.
+
+   Se aparecer um X vermelho, clique nele: a mensagem diz exatamente o
+   que está errado (chave trocada, tabela que não existe, etc.).
+
+De quebra, isso vira um vigia: se um dia o banco parar de responder, o
+GitHub te manda um e-mail avisando, em vez de você descobrir pelo
+cliente reclamando.
+
+ATENÇÃO: o GitHub desliga verificações automáticas em repositórios que
+passam 60 dias sem nenhuma alteração. Como vocês vão mexer no site com
+frequência, não deve acontecer — mas se um dia o site ficar meses
+parado, é só entrar na aba Actions e reativar.
+
+
+---------------------------------------------------------------------
+DEPOIS
+---------------------------------------------------------------------
+
+Com as duas linhas eu ligo o site no painel e mando o endereço do
+admin. A partir daí vocês três entram com a conta do Google, escrevem
+título e descrição de cada áudio, vídeo e texto, e enviam imagens e
+PDFs arrastando para a tela.
+
+Para acrescentar um quarto administrador depois, é só rodar no SQL
+Editor:
+
+    insert into public.admins (email, nome)
+    values ('email@gmail.com', 'Nome');
+
+E para tirar alguém:
+
+    delete from public.admins where email = 'email@gmail.com';
