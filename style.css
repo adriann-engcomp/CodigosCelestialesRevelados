@@ -2000,3 +2000,32 @@ input[name="_gotcha"] {
         gap: 8px;
     }
 }
+
+/* ---- aba do painel no menu (provisória, enquanto o site é montado) ----
+   Fica um pouco destacada de propósito: é ferramenta de trabalho, não
+   conteúdo do site. Para tirar, apague o <li class="menu-admin"> do
+   index.html; este bloco pode ficar, não atrapalha. */
+.menu-admin a {
+    color: var(--dourado);
+    border: 1px solid var(--borda);
+    border-radius: 2px;
+    padding: 5px 12px;
+}
+
+.menu-admin a:hover {
+    border-color: var(--dourado);
+}
+
+@media (max-width: 1180px) {
+    /* no celular o menu é uma lista: aqui ela só ganha uma separação */
+    .menu-admin {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--borda);
+    }
+
+    .menu-admin a {
+        border: none;
+        padding: 12px 0;
+    }
+}
