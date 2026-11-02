@@ -202,7 +202,7 @@ document.querySelectorAll(".foto img, .livro-capa img").forEach((img) => {
 /* ---------- 7. Elementos aparecem suavemente ao rolar ---------- */
 
 const alvos = document.querySelectorAll(
-    ".quadrado, .foto, .video, .livro, .audio-item, .link-item, .contato-item, .texto-duas-colunas p"
+    ".chamada, .foto, .livro, .contato-item, .capa-colunas p"
 );
 
 alvos.forEach((el) => el.classList.add("aparecer"));
@@ -355,7 +355,9 @@ if (leitor && window.pdfjsLib) {
         for (let numero = 1; numero <= documento.numPages; numero++) {
             const pagina = await documento.getPage(numero);
             const original = pagina.getViewport({ scale: 1 });
-            const escala = Math.min(disponivel / original.width, 2);
+            /* o 0.88 deixa a letra um pouquinho menor que a largura
+               cheia, para aparecer um pedaço maior do texto */
+            const escala = Math.min(disponivel / original.width, 2) * 0.88;
             const vista = pagina.getViewport({ scale: escala });
 
             const caixa = document.createElement("div");
@@ -466,8 +468,8 @@ if (leitor && window.pdfjsLib) {
 
     document.querySelectorAll(".abrir-pdf").forEach((botao) => {
         botao.addEventListener("click", () => {
-            const livro = botao.closest(".livro");
-            const titulo = livro ? livro.querySelector("h3").textContent : "Documento";
+            const dono = botao.closest(".livro, .item");
+            const titulo = dono ? dono.querySelector("h3").textContent : "Documento";
             abrirLeitor(botao.dataset.pdf, titulo);
         });
     });
@@ -477,9 +479,9 @@ if (leitor && window.pdfjsLib) {
    Enquanto o arquivo não for enviado para a pasta "audios", o cartão
    avisa em português em vez de mostrar um tocador quebrado. */
 
-document.querySelectorAll(".audio-item .audio-tocador").forEach((tocador) => {
+document.querySelectorAll(".item-audio .audio-tocador").forEach((tocador) => {
     tocador.addEventListener("error", () => {
-        tocador.closest(".audio-item").classList.add("sem-arquivo");
+        tocador.closest(".item-audio").classList.add("sem-arquivo");
     });
 });
 
@@ -497,6 +499,9 @@ if (barraAudio && window.speechSynthesis) {
     const barraEstado = document.getElementById("barraAudioEstado");
     const botaoPausar = document.getElementById("barraAudioPausar");
     const botaoParar = document.getElementById("barraAudioParar");
+    const escolhaVelocidade = document.getElementById("barraAudioVelocidade");
+    const campoPagina = document.getElementById("barraAudioPagina");
+    const botaoIr = document.getElementById("barraAudioIr");
 
     const voz = window.speechSynthesis;
 
@@ -508,6 +513,7 @@ if (barraAudio && window.speechSynthesis) {
     let indice = 0;
     let idioma = "pt-BR";
     let errosSeguidos = 0;   // para não ficar tentando falar sem conseguir
+    let velocidade = 1;      // velocidade da voz, escolhida na barra
 
     /* A voz do navegador engasga com textos longos, por isso o texto é
        falado em trechos curtos, cortados no fim das frases. */
@@ -559,6 +565,7 @@ if (barraAudio && window.speechSynthesis) {
         barraAudio.hidden = true;
         document.body.classList.remove("lendo-em-voz");
         botaoPausar.textContent = "Pausar";
+        campoPagina.value = 1;
     }
 
     /* Pega o texto da próxima página que tenha alguma palavra.
@@ -567,6 +574,8 @@ if (barraAudio && window.speechSynthesis) {
         while (docVoz && paginaVoz < docVoz.numPages) {
             paginaVoz++;
             mostrarEstado("página " + paginaVoz + " de " + docVoz.numPages);
+            // mostra na caixinha a página que está sendo lida agora
+            campoPagina.value = paginaVoz;
 
             const pagina = await docVoz.getPage(paginaVoz);
             const conteudo = await pagina.getTextContent();
@@ -600,6 +609,7 @@ if (barraAudio && window.speechSynthesis) {
 
         const fala = new SpeechSynthesisUtterance(pedacos[indice++]);
         fala.lang = idioma;
+        fala.rate = velocidade;
         const escolhida = escolherVoz();
         if (escolhida) fala.voice = escolhida;
 
@@ -635,8 +645,8 @@ if (barraAudio && window.speechSynthesis) {
         pararLeitura();
 
         const minha = sessao;
-        const livro = botao.closest(".livro");
-        const titulo = livro ? livro.querySelector("h3").textContent : "Livro";
+        const dono = botao.closest(".livro, .item");
+        const titulo = dono ? dono.querySelector("h3").textContent : "Livro";
 
         botaoAtual = botao;
         botao.textContent = "Parar áudio";
@@ -652,6 +662,7 @@ if (barraAudio && window.speechSynthesis) {
            esperar o PDF abrir seria tarde demais. */
         const anuncio = new SpeechSynthesisUtterance(titulo);
         anuncio.lang = idioma;
+        anuncio.rate = velocidade;
         voz.speak(anuncio);
 
         let aberto;
@@ -670,11 +681,44 @@ if (barraAudio && window.speechSynthesis) {
         }
 
         docVoz = aberto;
+        campoPagina.max = aberto.numPages;
+        campoPagina.value = 1;
         paginaVoz = 0;
         pedacos = [];
         indice = 0;
         falarProximo(minha);
     }
+
+    /* Recomeça a leitura na página pedida. O "sessao++" faz as falas
+       da leitura anterior serem ignoradas, sem precisar fechar o livro. */
+    function pularParaPagina(numero) {
+        if (!docVoz) return;
+
+        const pagina = Math.min(Math.max(1, Number(numero) || 1), docVoz.numPages);
+
+        sessao++;
+        const minha = sessao;
+        voz.cancel();
+
+        paginaVoz = pagina - 1;
+        pedacos = [];
+        indice = 0;
+        botaoPausar.textContent = "Pausar";
+
+        falarProximo(minha);
+    }
+
+    botaoIr.addEventListener("click", () => pularParaPagina(campoPagina.value));
+
+    campoPagina.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") pularParaPagina(campoPagina.value);
+    });
+
+    /* A velocidade nova vale a partir do próximo trecho falado — poucos
+       segundos depois, sem cortar a frase que está no ar. */
+    escolhaVelocidade.addEventListener("change", () => {
+        velocidade = Number(escolhaVelocidade.value) || 1;
+    });
 
     botaoPausar.addEventListener("click", () => {
         if (voz.paused) {

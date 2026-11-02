@@ -8,6 +8,7 @@ estilo de construção do EncantosDoLar.
 | Arquivo | Para que serve |
 |---|---|
 | `index.html` | Todo o **conteúdo** e os textos do site |
+| `conteudos.js` | A **lista dos 36 áudios, 36 vídeos e 36 temas e resumos** — é aqui que se escreve o título e a descrição de cada um |
 | `style.css` | As **cores, fontes e o layout** |
 | `script.js` | Os **comportamentos** (menu, galeria, vídeos, leitor de PDF, leitura em voz alta) |
 | `imagens/` | Onde ficam as fotos da galeria (veja o `LEIA-ME.txt` lá dentro) |
@@ -20,6 +21,19 @@ estilo de construção do EncantosDoLar.
 
 Dê dois cliques no `index.html`. Ele abre no navegador. Depois de editar
 qualquer arquivo, é só apertar **F5** na página para ver a mudança.
+
+## Onde mexer em cada coisa
+
+| Quero mudar... | Mexo em... |
+|---|---|
+| os textos da primeira tela, o nome de um livro, o contato | `index.html` |
+| o título e a descrição de um áudio, vídeo, tema ou resumo | `conteudos.js` |
+| a legenda ou a ordem das imagens da galeria | `index.html`, seção GALERIA |
+| um arquivo de áudio novo | pasta `audios/` + `conteudos.js` |
+| um PDF novo de livro | pasta `livros/` + `index.html` |
+| a capa de um livro | pasta `livros/ImagensDosLivros/` |
+
+Cada pasta tem um `LEIA-ME.txt` explicando o passo a passo.
 
 ---
 

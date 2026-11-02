@@ -13,24 +13,47 @@ O site tem DOIS tipos de áudio:
      Só funciona nos livros que têm PDF.
 
 
+A SEÇÃO DE ÁUDIOS TEM 36 ESPAÇOS
+--------------------------------
+São 12 áudios por página, em 3 páginas (os botões PÁGINA 1, PÁGINA 2 e
+PÁGINA 3 ficam embaixo da grade). Os 36 espaços já existem: o que falta
+é o arquivo, o título e a descrição de cada um.
+
+Enquanto o arquivo não chega, o cartão diz "áudio ainda não enviado".
+
+
 COMO ACRESCENTAR UM ÁUDIO GRAVADO
 ---------------------------------
-1. Salve o arquivo nesta pasta com um nome assim:
+1. Salve o arquivo NESTA pasta, com um nome assim:
 
-       audio1.mp3
-       audio2.mp3
-       audio3.mp3
+       audio-01.mp3
+       audio-02.mp3
+       audio-03.mp3
 
-   Os três primeiros já estão previstos no site: basta colocar o arquivo
-   com esse nome e ele aparece sozinho.
+2. Abra o arquivo conteudos.js (fica na pasta principal do site, junto
+   com o index.html) e procure a lista "const AUDIOS = [".
 
-2. Para o quarto em diante, abra o index.html, procure a seção ÁUDIOS e
-   copie um bloco inteiro que comece com <article class="audio-item">,
-   trocando audio3.mp3 por audio4.mp3 (em DOIS lugares: no src do
-   <audio> e no href do "Baixar áudio").
+3. Ache o espaço que você quer usar e preencha os quatro campos:
 
-3. Troque também o título ("Áudio 1") e a linha de descrição pelo
-   assunto real do áudio.
+       {
+           titulo: "Como cuidar da saúde do corpo",
+           resumo: "Duas ou três frases contando do que trata o áudio.",
+           descricao: "A descrição maior, que só aparece quando a
+                       pessoa aperta o botão. Pode ficar vazia.",
+           arquivo: "audios/audio-01.mp3"
+       },
+
+   - titulo    aparece em cima do cartão.
+   - resumo    é a descrição pequena, de 2 ou 3 frases.
+   - descricao é a descrição grande. Se deixar "" (vazia), o botão
+               "DESCRIÇÃO COMPLETA" nem aparece.
+   - arquivo   é o caminho do MP3. Se deixar "" (vazio), o cartão volta
+               a dizer "áudio ainda não enviado".
+
+4. Salve o conteudos.js e aperte F5 na página do site.
+
+IMPORTANTE: dentro dos textos, use aspas curvas (“ ”). As aspas retas (")
+fechariam a linha antes da hora e a seção pararia de aparecer.
 
 
 NOME DO ARQUIVO
@@ -43,13 +66,13 @@ maiúscula de minúscula e o espaço vira %20.
 MP3 OU WAV?
 -----------
 Prefira MP3: toca em todos os navegadores e o arquivo fica muito menor.
-O WAV também funciona (troque .mp3 por .wav nos dois lugares), mas um
+O WAV também funciona (troque .mp3 por .wav no campo "arquivo"), mas um
 áudio de 10 minutos em WAV passa de 100 MB e não caberia no site.
 
 Limite: 100 MB por arquivo, 1 GB no site inteiro.
 
 
-Se o audio nao existe
---------------------------------
-O cartão do áudio mostra "áudio ainda não enviado", em vez de um
-tocador quebrado. Nada quebra na página.
+PRECISA DE MAIS DE 36 ÁUDIOS?
+-----------------------------
+É só copiar um bloco inteiro { ... }, com a vírgula, e colar no fim da
+lista. O site cria a quarta página sozinho, de 12 em 12.

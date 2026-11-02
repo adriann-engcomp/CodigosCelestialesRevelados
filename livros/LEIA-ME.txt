@@ -2,28 +2,65 @@ PASTA DOS LIVROS EM PDF
 =======================
 
 O site tem DUAS seções de livros: "Livros em português" e "Livros em
-espanhol". Os arquivos desta pasta aparecem nelas com três botões:
+espanhol". Todo livro aparece com os MESMOS três botões:
 
     Baixar PDF      - salva o arquivo no aparelho
     Ler aqui        - abre o livro por cima da página
     Escutar áudio   - o navegador lê o livro em voz alta
 
-Arquivos usados hoje pelo site:
+Arquivos que já estão nesta pasta:
 
   em português
-    codigo-celestial-amazonia.pdf
+    codigo-celestial-ceu-e-terra.pdf      (era codigo-celestial-amazonia.pdf)
 
   em espanhol
     eka-tantra.pdf
     codigo_de_la_justicia_divina.pdf
+    codigo-de-sintesis-holistico.pdf
     codigo-tantrico-alfa-y-omega-galactico.pdf
     codigo-tantrico-la-flor-de-la-vida.pdf
-    codigo-tantrico-celestial-mensaje-de-los-divinos-padres-celestiales.pdf
-    codigo-de-sintesis-holistico.pdf
 
-Os demais livros aparecem só com a capa e o link "Solicitar exemplar",
-porque o PDF ainda não chegou. Dois deles ainda não têm nem capa
-(Dharma Supremo e Aperfeiçoamento) e mostram uma estrela no lugar.
+  fora do site
+    codigo-tantrico-celestial-mensaje-de-los-divinos-padres-celestiales.pdf
+       Este livro foi retirado da página, mas o arquivo continua aqui.
+       Para apagar de vez, é só apagar o arquivo.
+
+
+LIVROS QUE AINDA ESPERAM O ARQUIVO
+----------------------------------
+Os livros sem PDF levam a classe "sem-arquivo": a capa ganha a faixa
+dourada "ARQUIVO EM BREVE" e os três botões ficam apagados, sem poder
+ser clicados. Nada de "Solicitar exemplar" — isso saiu do site.
+
+Em português:  Aperfeiçoamento, Dharma Supremo
+Em espanhol:   Tao Galáctico, Divino Deus Uno Absoluto, Céu e Terra,
+               Universal, Andino, Flor do Coração, Árvore da Vida,
+               Reinos Superiores, Joia do Coração I a IV,
+               Ekadanta Bhakti Siddhanta
+
+
+PARA DAR PDF A UM LIVRO QUE AINDA NÃO TEM
+-----------------------------------------
+1. Coloque o arquivo nesta pasta, seguindo a regra de nome abaixo.
+
+2. No index.html, ache o <article class="livro sem-arquivo"> daquele
+   livro e TIRE a palavra sem-arquivo, deixando só:
+
+       <article class="livro">
+
+3. Troque os três botões apagados
+
+       <button class="botao botao-principal" disabled>Baixar PDF</button>
+       <button class="botao botao-principal" disabled>Ler aqui</button>
+       <button class="botao botao-principal" disabled>Escutar áudio</button>
+
+   pelos três botões de um livro que já funciona (por exemplo o Eka
+   Tantra), trocando o nome do arquivo. O nome aparece em TRÊS lugares:
+   no href do "Baixar PDF", no data-pdf do "Ler aqui" e no data-pdf do
+   "Escutar áudio".
+
+4. No "Escutar áudio", o data-idioma diz em que língua a voz vai ler:
+   pt-BR para os livros em português, es-ES para os em espanhol.
 
 
 NOME DO ARQUIVO
@@ -36,38 +73,36 @@ GitHub diferencia maiúscula de minúscula (ao contrário do Windows). Um
 arquivo chamado "Código Tántrico.pdf" funciona no seu computador e quebra
 no site publicado.
 
-Três arquivos foram renomeados por causa disso:
-
-    Código de Síntisis Holistico..pdf          -> codigo-de-sintesis-holistico.pdf
-    Código Tántrico Alfa y Omega Galactico.pdf -> codigo-tantrico-alfa-y-omega-galactico.pdf
-    Eka Tantra.pdf                             -> eka-tantra.pdf
+O nome do arquivo é também o nome que aparece quando a pessoa baixa o
+livro — por isso o arquivo do Céu e Terra foi renomeado.
 
 
-PARA DAR PDF A UM LIVRO QUE AINDA NÃO TEM
------------------------------------------
-1. Coloque o arquivo nesta pasta, seguindo a regra de ouro acima.
+AS CAPAS DOS LIVROS
+-------------------
+Ficam na pasta ImagensDosLivros, ao lado desta.
 
-2. No index.html, ache o <article class="livro"> daquele livro e troque
-   a linha do "Solicitar exemplar" pelas três linhas de botões de um
-   livro que já tem PDF (por exemplo o Eka Tantra).
+As capas dos 3 livros em português são PROVISÓRIAS: foram desenhadas
+aqui, uma de cada cor (azul, verde-escuro e roxo), com a moldura dourada
+mais grossa.
 
-3. O nome do arquivo precisa aparecer em TRÊS lugares:
-   no href do "Baixar PDF", no data-pdf do "Ler aqui" e no data-pdf do
-   "Escutar áudio".
+    codigo-celestial-do-aperfeicoamento.png
+    codigo-celestial-ceu-e-terra.png
+    codigo-celestial-do-dharma-supremo.png
 
-4. No "Escutar áudio", o data-idioma diz em que língua a voz vai ler:
-   pt-BR para os livros em português, es-ES para os em espanhol.
+PARA TROCAR A CAPA DE UM LIVRO
+   Jeito 1 (mais simples): salve a capa nova com EXATAMENTE o mesmo nome
+   do arquivo antigo, por cima dele. Não precisa mexer no index.html.
 
+   Jeito 2: ponha a capa nova em ImagensDosLivros com o nome que quiser
+   e, no index.html, troque o src da imagem daquele livro:
 
-PARA ACRESCENTAR UM LIVRO NOVO
-------------------------------
-No index.html, na seção de livros certa (português ou espanhol), copie
-um bloco <article class="livro"> inteiro e troque:
+       <img src="livros/ImagensDosLivros/NOME-NOVO.png" alt="Capa ...">
 
-    - o <h3> com o título
-    - a imagem da capa em ImagensDosLivros (ou deixe a <div
-      class="livro-capa"> vazia, que o site desenha uma estrela no lugar)
-    - o nome do PDF nos três lugares descritos acima
+   A capa aparece recortada num retângulo de 150 x 214 pontos, então
+   imagens em pé (mais altas que largas) ficam melhores.
+
+As capas dos livros em espanhol continuam em espanhol, como foi pedido —
+só o título escrito ao lado é que está em português.
 
 
 LIMITES
@@ -75,14 +110,13 @@ LIMITES
 Máximo de 100 MB por arquivo (25 MB se enviar arrastando pelo site do
 GitHub). O site inteiro pode ter 1 GB, com 100 GB de tráfego por mês.
 
-Hoje os sete livros somam menos de 8 MB — bem folgado.
-
 
 COMO O SITE SE COMPORTA
 -----------------------
 - O "Ler aqui" abre o PDF por cima da página, no computador e no celular.
   Feche com o X ou com a tecla Esc.
-- O "Escutar áudio" usa a voz do próprio aparelho. Se o navegador não
-  souber ler em voz alta, o site avisa em português.
+- O "Escutar áudio" usa a voz do próprio aparelho. Na barra que aparece
+  embaixo dá para escolher a VELOCIDADE da voz e a PÁGINA em que a
+  leitura começa, além de pausar e parar.
 - Se o arquivo não estiver aqui, o site avisa em português em vez de
   mostrar o erro do navegador.

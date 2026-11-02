@@ -5,11 +5,23 @@ Aqui ficam as imagens da galeria (seção "Galeria de imagens", no final
 da página) e a imagem de prévia usada quando o link do site é
 compartilhado no WhatsApp, Facebook ou Telegram.
 
-Imagens usadas hoje na galeria, nesta ordem:
+A galeria tem hoje 61 espaços, nesta ordem:
 
-    7-min.jpg, 12-min.jpg, 13-min.jpg, 14-min.jpg, 19-min.jpg,
-    24-min.jpg, 25-min.jpg, 28-min.jpg, 29-min.jpg   (desenhos dos códigos)
-    winphala.jpg    (bandeira Wiphala)
+  1) fotos das folhas dos códigos, com o texto escrito à mão (9)
+        7-min.jpg, 12-min.jpg, 13-min.jpg, 14-min.jpg, 19-min.jpg,
+        24-min.jpg, 25-min.jpg, 28-min.jpg, 29-min.jpg
+
+  2) a bandeira Wiphala (1)
+        winphala.jpg
+
+  3) os desenhos do rolo, na pasta galeria/ (36)
+        galeria/desenho-01.jpg  até  galeria/desenho-36.jpg
+
+  4) 15 espaços reservados, ainda sem imagem
+        aparecem com um fundo azul escuro e uma estrela
+
+Saíram da galeria (os arquivos continuam aqui, caso queira voltar):
+
     yantra.jpg      (Yantra)
     portada.jpg     (Eka Tantra)
 
@@ -22,13 +34,29 @@ As capas dos livros NÃO ficam aqui: elas estão em
 livros/ImagensDosLivros.
 
 
-PARA TROCAR A ORDEM OU ACRESCENTAR IMAGENS
-------------------------------------------
-Abra o index.html, procure a seção GALERIA DE IMAGENS e mexa nas linhas
-que começam com <figure class="foto">. A ordem das linhas é a ordem em
-que as imagens aparecem. Para acrescentar, copie uma linha inteira e
-troque o nome do arquivo (em DOIS lugares: no src e no alt) e a legenda
-do <figcaption>.
+PARA USAR UM DOS 15 ESPAÇOS RESERVADOS
+--------------------------------------
+1. Ponha o arquivo na pasta imagens/galeria, com um nome como
+   desenho-37.jpg.
+
+2. Abra o index.html, procure a seção GALERIA DE IMAGENS e ache a linha
+   do espaço reservado que você quer usar:
+
+       <figure class="foto sem-imagem"><figcaption>Espaço reservado 1</figcaption></figure>
+
+3. Troque essa linha inteira por uma linha igual às dos desenhos:
+
+       <figure class="foto"><img src="imagens/galeria/desenho-37.jpg" alt="Desenho dos Códigos" loading="lazy"><figcaption>Desenho dos Códigos 37</figcaption></figure>
+
+   O nome do arquivo aparece uma vez (no src) e o nome que aparece
+   embaixo da imagem é o texto do <figcaption>.
+
+
+PARA TROCAR A ORDEM OU O NOME DE UMA IMAGEM
+-------------------------------------------
+A ordem das linhas <figure class="foto"> no index.html é a ordem em que
+as imagens aparecem. Para mudar o nome que aparece embaixo, altere só o
+texto do <figcaption>.
 
 
 DICAS
