@@ -160,8 +160,38 @@ async function entrou(quem) {
         return;
     }
 
+    await registrarAcesso(quem);
+
     mostrar("editor");
     await carregar(tipoAtual);
+}
+
+/* Anota na tabela acessos que esta pessoa entrou.
+
+   Registra UMA vez por sessão do navegador, e não a cada F5: senão a
+   lista viraria um monte de linhas repetidas da mesma visita. Se der
+   erro (a tabela ainda não existe, por exemplo), não atrapalha nada —
+   o painel segue funcionando. */
+async function registrarAcesso(quem) {
+    const marca = "acesso-registrado";
+
+    try {
+        if (sessionStorage.getItem(marca) === quem.email) return;
+    } catch (e) {
+        /* navegador sem sessionStorage: registra e segue */
+    }
+
+    const { error } = await cliente
+        .from("acessos")
+        .insert({ email: quem.email });
+
+    if (error) return;
+
+    try {
+        sessionStorage.setItem(marca, quem.email);
+    } catch (e) {
+        /* paciência */
+    }
 }
 
 /* ---------- 4. Entrar e sair ---------- */
@@ -206,6 +236,12 @@ abas.addEventListener("click", async (e) => {
 async function carregar(tipo) {
     dizer("Carregando…");
     lista.innerHTML = "";
+
+    /* a aba "Quem entrou" não é conteúdo do site: tem lista própria */
+    if (tipo === "acessos") {
+        await carregarAcessos();
+        return;
+    }
 
     const { data, error } = await cliente
         .from("conteudos")
@@ -280,6 +316,57 @@ function botaoAcrescentar(tipo, ultima) {
     caixa.appendChild(botao);
     caixa.appendChild(recado);
     return caixa;
+}
+
+/* ---------- 6b. Quem entrou no painel ----------
+
+   Lista simples: o e-mail e a hora, do mais recente para o mais antigo.
+   Serve para você saber quando o cliente mexeu no site. Ninguém consegue
+   alterar nem apagar esta lista pelo painel — as regras do banco só
+   permitem ler e acrescentar.                                          */
+
+async function carregarAcessos() {
+    const { data, error } = await cliente
+        .from("acessos")
+        .select("email, entrou_em")
+        .order("entrou_em", { ascending: false })
+        .limit(200);
+
+    if (error) {
+        dizer("Não consegui ler os acessos: " + error.message +
+            " — falta rodar o supabase/esquema-acessos.sql.", true);
+        return;
+    }
+
+    if (!data.length) {
+        dizer("Nenhuma entrada registrada ainda.");
+        return;
+    }
+
+    const tabela = criar("div", "admin-acessos");
+
+    data.forEach((linha) => {
+        const quando = new Date(linha.entrou_em);
+
+        const item = criar("div", "admin-acesso");
+        item.appendChild(criar("span", "admin-acesso-email", linha.email));
+        item.appendChild(criar("span", "admin-acesso-data",
+            quando.toLocaleDateString("pt-BR", {
+                day: "2-digit", month: "2-digit", year: "numeric"
+            })));
+        item.appendChild(criar("span", "admin-acesso-hora",
+            quando.toLocaleTimeString("pt-BR", {
+                hour: "2-digit", minute: "2-digit"
+            })));
+
+        tabela.appendChild(item);
+    });
+
+    lista.appendChild(tabela);
+
+    const ultima = new Date(data[0].entrou_em);
+    dizer(data.length + " entradas. A última foi de " + data[0].email +
+        ", em " + ultima.toLocaleString("pt-BR") + ".");
 }
 
 /* ---------- 7. As peças do formulário ---------- */

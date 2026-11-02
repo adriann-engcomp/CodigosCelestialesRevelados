@@ -2245,3 +2245,59 @@ input[name="_gotcha"] {
     flex-wrap: wrap;
     gap: 10px;
 }
+
+/* ---- a aba "Quem entrou" e a lista dela ----
+   A aba fica um pouco separada das outras porque não edita conteúdo:
+   é registro, não conteúdo do site. */
+.admin-aba-parte {
+    margin-left: 18px;
+}
+
+.admin-acessos {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-acesso {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 11px 16px;
+    font-size: 0.88rem;
+    background: var(--fundo-cartao);
+    border: 1px solid var(--borda);
+    border-radius: 3px;
+}
+
+.admin-acesso-email {
+    flex: 1 1 auto;
+    color: #fff;
+    overflow-wrap: anywhere;
+}
+
+.admin-acesso-data {
+    flex: 0 0 auto;
+    color: var(--texto-fraco);
+}
+
+.admin-acesso-hora {
+    flex: 0 0 56px;
+    text-align: right;
+    color: var(--dourado);
+}
+
+@media (max-width: 480px) {
+    .admin-aba-parte {
+        margin-left: 0;
+    }
+
+    .admin-acesso {
+        flex-wrap: wrap;
+        gap: 4px 12px;
+    }
+
+    .admin-acesso-email {
+        flex: 1 1 100%;
+    }
+}
