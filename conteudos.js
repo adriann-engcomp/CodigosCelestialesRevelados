@@ -906,3 +906,214 @@ function montarSecao(lista, idPaginas, idPaginacao, fazerCartao) {
 montarSecao(AUDIOS, "paginasAudios", "paginacaoAudios", cartaoDeAudio);
 montarSecao(VIDEOS, "paginasVideos", "paginacaoVideos", cartaoDeVideo);
 montarSecao(TEMAS, "paginasTemas", "paginacaoTemas", cartaoDeTema);
+
+
+/* ---------- 5. Os livros ----------
+
+   Mesma ideia das três seções de cima: a lista abaixo é a RESERVA, e o
+   conteudo-remoto.js troca por aquilo que estiver no painel.
+
+   Cada livro tem:
+       titulo    o nome, escrito em português
+       traducao  o nome traduzido, que aparece entre parênteses abaixo
+       pdf       o arquivo do livro; vazio = "arquivo em breve"
+       capa      a imagem da capa                                        */
+
+const LIVROS_PT = [
+    {
+        titulo: "Código Celestial do Aperfeiçoamento",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-celestial-do-aperfeicoamento.png"
+    },
+    {
+        titulo: "Código Celestial Céu e Terra",
+        traducao: "",
+        pdf: "livros/codigo-celestial-ceu-e-terra.pdf",
+        capa: "livros/ImagensDosLivros/codigo-celestial-ceu-e-terra.png"
+    },
+    {
+        titulo: "Código Celestial do Dharma Supremo",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-celestial-do-dharma-supremo.png"
+    },
+];
+
+const LIVROS_ES = [
+    {
+        titulo: "Código Celestial Eka Tantra",
+        traducao: "Revelação da Unidade",
+        pdf: "livros/eka-tantra.pdf",
+        capa: "livros/ImagensDosLivros/eka-tantra.png"
+    },
+    {
+        titulo: "Código Celestial da Justiça Divina",
+        traducao: "",
+        pdf: "livros/codigo_de_la_justicia_divina.pdf",
+        capa: "livros/ImagensDosLivros/codigo-de-la-justicia-divina.jpg"
+    },
+    {
+        titulo: "Código Celestial da Síntese Holística",
+        traducao: "",
+        pdf: "livros/codigo-de-sintesis-holistico.pdf",
+        capa: "livros/ImagensDosLivros/codigo-de-sistesis-holistico.png"
+    },
+    {
+        titulo: "Código Celestial Alfa e Ômega Galáctico",
+        traducao: "",
+        pdf: "livros/codigo-tantrico-alfa-y-omega-galactico.pdf",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-alfa-y-omega-galactico.png"
+    },
+    {
+        titulo: "Código Celestial do Tao Galáctico",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-tao-galactico.jpg"
+    },
+    {
+        titulo: "Código Celestial do Divino Deus Uno Absoluto",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-divino-dios-uno-absoluto.jpeg"
+    },
+    {
+        titulo: "Código Celestial Céu e Terra",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/el-codigo-tupa-cielo-y-tierra.jpeg"
+    },
+    {
+        titulo: "Código Celestial Universal",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-universal.png"
+    },
+    {
+        titulo: "Código Celestial Andino",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-andino.png"
+    },
+    {
+        titulo: "Código Celestial da Flor da Vida",
+        traducao: "",
+        pdf: "livros/codigo-tantrico-la-flor-de-la-vida.pdf",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-la-flor-de-la-vida.jpeg"
+    },
+    {
+        titulo: "Código Celestial da Flor do Coração",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-la-flor-del-corazon-01.jpeg"
+    },
+    {
+        titulo: "Código Celestial da Árvore da Vida",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-el-arbol-de-la-vida.jpeg"
+    },
+    {
+        titulo: "Código Celestial dos Reinos Superiores",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/divino-codigo-de-los-reinos-superiores.jpg"
+    },
+    {
+        titulo: "Código Celestial da Joia do Coração I",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-la-joya-del-corazon-1.jpeg"
+    },
+    {
+        titulo: "Código Celestial da Joia do Coração II",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-la-joya-del-corazon-2.jpeg"
+    },
+    {
+        titulo: "Código Celestial da Joia do Coração III",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-la-joya-del-corazon-3.jpeg"
+    },
+    {
+        titulo: "Código Celestial da Joia do Coração IV",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/codigo-tantrico-la-joya-del-corazon-4.jpg"
+    },
+    {
+        titulo: "Código Celestial Ekadanta Bhakti Siddhanta",
+        traducao: "",
+        pdf: "",
+        capa: "livros/ImagensDosLivros/ekadanta-bhakti-siddhanta.jpeg"
+    },
+];
+
+
+/* Monta um livro com o mesmo desenho de antes: o título em cima, em duas
+   linhas, e embaixo a capa à esquerda com os três botões à direita. */
+function cartaoDeLivro(livro, idioma) {
+    const artigo = criar("article", "livro");
+
+    const titulo = criar("h3", "livro-titulo", livro.titulo);
+    if (livro.traducao) {
+        titulo.appendChild(criar("span", "livro-traducao", "(" + livro.traducao + ")"));
+    }
+    artigo.appendChild(titulo);
+
+    const corpo = criar("div", "livro-corpo");
+
+    const capa = criar("div", "livro-capa");
+    if (livro.capa) {
+        const img = document.createElement("img");
+        img.src = livro.capa;
+        img.alt = "Capa do livro " + livro.titulo;
+        capa.appendChild(img);
+    }
+    corpo.appendChild(capa);
+
+    const acoes = criar("div", "livro-acoes");
+
+    if (livro.pdf) {
+        const baixar = criar("a", "botao botao-principal", "Baixar PDF");
+        baixar.href = livro.pdf;
+        baixar.setAttribute("download", "");
+
+        const ler = criar("button", "botao botao-principal abrir-pdf", "Ler aqui");
+        ler.dataset.pdf = livro.pdf;
+
+        const ouvir = criar("button", "botao botao-principal escutar-audio", "Escutar áudio");
+        ouvir.dataset.pdf = livro.pdf;
+        ouvir.dataset.idioma = idioma;
+
+        acoes.appendChild(baixar);
+        acoes.appendChild(ler);
+        acoes.appendChild(ouvir);
+    } else {
+        /* sem arquivo na pasta: os três botões ficam apagados e a capa
+           ganha a faixa "arquivo em breve" */
+        artigo.classList.add("sem-arquivo");
+        ["Baixar PDF", "Ler aqui", "Escutar áudio"].forEach((texto) => {
+            const b = criar("button", "botao botao-principal", texto);
+            b.disabled = true;
+            acoes.appendChild(b);
+        });
+    }
+
+    corpo.appendChild(acoes);
+    artigo.appendChild(corpo);
+    return artigo;
+}
+
+function montarLivros(lista, idGrade, idioma) {
+    const grade = document.getElementById(idGrade);
+    if (!grade) return;
+
+    grade.innerHTML = "";
+    lista.forEach((livro) => grade.appendChild(cartaoDeLivro(livro, idioma)));
+}
+
+montarLivros(LIVROS_PT, "gradeLivrosPt", "pt-BR");
+montarLivros(LIVROS_ES, "gradeLivrosEs", "es-ES");

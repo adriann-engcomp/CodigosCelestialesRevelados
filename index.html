@@ -26,7 +26,7 @@
 
     <!-- NAO APAGUE esta linha: e ela que carrega toda a formatacao do site.
         O "?v=14" faz o navegador buscar a versao nova em vez da guardada. -->
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=18">
 
     <!-- Ficha do site para o Google -->
     <script type="application/ld+json">
@@ -138,15 +138,13 @@
     <main>
 
         <!-- ================= LIVROS EM PORTUGUÊS =================
-            Cada livro tem SEMPRE os mesmos três botões. O nome do arquivo
-            aparece em três lugares: no href do "Baixar PDF", no data-pdf do
-            "Ler aqui" e no data-pdf do "Escutar áudio".
+            Os livros não ficam mais escritos aqui: são desenhados pelo
+            conteudos.js e podem ser trocados pelo painel (admin.html).
 
-            Enquanto o PDF não estiver na pasta "livros", o livro leva a
-            classe "sem-arquivo" e os três botões ficam com a palavra
-            "disabled". Quando o arquivo chegar: tire a classe "sem-arquivo"
-            do <article>, tire os três "disabled" e troque os três botões
-            pelo modelo do primeiro livro desta lista. -->
+            Cada livro tem SEMPRE os mesmos três botões. Quando o livro não
+            tem PDF, os três ficam apagados e a capa ganha a faixa
+            "arquivo em breve" — isso é automático, basta o campo do PDF
+            estar vazio. -->
         <section id="livros-portugues" class="secao">
             <div class="secao-interna">
 
@@ -157,51 +155,11 @@
                     leitura automática.
                 </p>
 
-                <div class="livros-grid">
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial do Aperfeiçoamento</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-celestial-do-aperfeicoamento.png" alt="Capa do Código Celestial do Aperfeiçoamento">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro">
-                        <h3 class="livro-titulo">Código Celestial Céu e Terra</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-celestial-ceu-e-terra.png" alt="Capa do Código Celestial Céu e Terra">
-                            </div>
-                            <div class="livro-acoes">
-                                <a class="botao botao-principal" href="livros/codigo-celestial-ceu-e-terra.pdf" download>Baixar PDF</a>
-                                <button class="botao botao-principal abrir-pdf" data-pdf="livros/codigo-celestial-ceu-e-terra.pdf">Ler aqui</button>
-                                <button class="botao botao-principal escutar-audio" data-pdf="livros/codigo-celestial-ceu-e-terra.pdf" data-idioma="pt-BR">Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial do Dharma Supremo</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-celestial-do-dharma-supremo.png" alt="Capa do Código Celestial do Dharma Supremo">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
+                <!-- Os livros são desenhados pelo conteudos.js, a partir da lista
+                     LIVROS_PT; quando o painel tem conteúdo, o conteudo-remoto.js
+                     troca pela versão de lá. Para mexer num livro, use o painel
+                     (aba Livros em português) ou a lista do conteudos.js. -->
+                <div class="livros-grid" id="gradeLivrosPt"></div>
 
             </div>
         </section>
@@ -219,264 +177,9 @@
                     leitura automática.
                 </p>
 
-                <div class="livros-grid">
-
-                    <article class="livro">
-                        <h3 class="livro-titulo">
-                            Código Celestial Eka Tantra
-                            <span class="livro-traducao">(Revelação da Unidade)</span>
-                        </h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/eka-tantra.png" alt="Capa do livro Eka Tantra">
-                            </div>
-                            <div class="livro-acoes">
-                                <a class="botao botao-principal" href="livros/eka-tantra.pdf" download>Baixar PDF</a>
-                                <button class="botao botao-principal abrir-pdf" data-pdf="livros/eka-tantra.pdf">Ler aqui</button>
-                                <button class="botao botao-principal escutar-audio" data-pdf="livros/eka-tantra.pdf" data-idioma="es-ES">Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro">
-                        <h3 class="livro-titulo">Código Celestial da Justiça Divina</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-de-la-justicia-divina.jpg" alt="Capa do livro Código de la Justicia Divina">
-                            </div>
-                            <div class="livro-acoes">
-                                <a class="botao botao-principal" href="livros/codigo_de_la_justicia_divina.pdf" download>Baixar PDF</a>
-                                <button class="botao botao-principal abrir-pdf" data-pdf="livros/codigo_de_la_justicia_divina.pdf">Ler aqui</button>
-                                <button class="botao botao-principal escutar-audio" data-pdf="livros/codigo_de_la_justicia_divina.pdf" data-idioma="es-ES">Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro">
-                        <h3 class="livro-titulo">Código Celestial da Síntese Holística</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-de-sistesis-holistico.png" alt="Capa do livro Código de Síntesis Holístico">
-                            </div>
-                            <div class="livro-acoes">
-                                <a class="botao botao-principal" href="livros/codigo-de-sintesis-holistico.pdf" download>Baixar PDF</a>
-                                <button class="botao botao-principal abrir-pdf" data-pdf="livros/codigo-de-sintesis-holistico.pdf">Ler aqui</button>
-                                <button class="botao botao-principal escutar-audio" data-pdf="livros/codigo-de-sintesis-holistico.pdf" data-idioma="es-ES">Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro">
-                        <h3 class="livro-titulo">Código Celestial Alfa e Ômega Galáctico</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-alfa-y-omega-galactico.png" alt="Capa do livro Código Tántrico Alfa y Omega Galáctico">
-                            </div>
-                            <div class="livro-acoes">
-                                <a class="botao botao-principal" href="livros/codigo-tantrico-alfa-y-omega-galactico.pdf" download>Baixar PDF</a>
-                                <button class="botao botao-principal abrir-pdf" data-pdf="livros/codigo-tantrico-alfa-y-omega-galactico.pdf">Ler aqui</button>
-                                <button class="botao botao-principal escutar-audio" data-pdf="livros/codigo-tantrico-alfa-y-omega-galactico.pdf" data-idioma="es-ES">Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial do Tao Galáctico</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-tao-galactico.jpg" alt="Capa do livro Código Tántrico Tao Galáctico">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial do Divino Deus Uno Absoluto</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-divino-dios-uno-absoluto.jpeg" alt="Capa do livro Código Tántrico Divino Dios Uno Absoluto">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial Céu e Terra</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/el-codigo-tupa-cielo-y-tierra.jpeg" alt="Capa do livro El Código Tupa Cielo y Tierra">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial Universal</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-universal.png" alt="Capa do livro Código Tántrico Universal">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial Andino</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-andino.png" alt="Capa do livro Código Tántrico Andino">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro">
-                        <h3 class="livro-titulo">Código Celestial da Flor da Vida</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-la-flor-de-la-vida.jpeg" alt="Capa do livro Código Tántrico La Flor de la Vida">
-                            </div>
-                            <div class="livro-acoes">
-                                <a class="botao botao-principal" href="livros/codigo-tantrico-la-flor-de-la-vida.pdf" download>Baixar PDF</a>
-                                <button class="botao botao-principal abrir-pdf" data-pdf="livros/codigo-tantrico-la-flor-de-la-vida.pdf">Ler aqui</button>
-                                <button class="botao botao-principal escutar-audio" data-pdf="livros/codigo-tantrico-la-flor-de-la-vida.pdf" data-idioma="es-ES">Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial da Flor do Coração</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-la-flor-del-corazon-01.jpeg" alt="Capa do livro Código Tántrico La Flor del Corazón">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial da Árvore da Vida</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-el-arbol-de-la-vida.jpeg" alt="Capa do livro Código Tántrico El Árbol de la Vida">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial dos Reinos Superiores</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/divino-codigo-de-los-reinos-superiores.jpg" alt="Capa do livro Divino Código de los Reinos Superiores">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial da Joia do Coração I</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-la-joya-del-corazon-1.jpeg" alt="Capa do livro Código Tántrico La Joya del Corazón I">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial da Joia do Coração II</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-la-joya-del-corazon-2.jpeg" alt="Capa do livro Código Tántrico La Joya del Corazón II">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial da Joia do Coração III</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-la-joya-del-corazon-3.jpeg" alt="Capa do livro Código Tántrico La Joya del Corazón III">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial da Joia do Coração IV</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/codigo-tantrico-la-joya-del-corazon-4.jpg" alt="Capa do livro Código Tántrico La Joya del Corazón IV">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="livro sem-arquivo">
-                        <h3 class="livro-titulo">Código Celestial Ekadanta Bhakti Siddhanta</h3>
-                        <div class="livro-corpo">
-                            <div class="livro-capa">
-                                <img src="livros/ImagensDosLivros/ekadanta-bhakti-siddhanta.jpeg" alt="Capa do livro Ekadanta Bhakti Siddhanta">
-                            </div>
-                            <div class="livro-acoes">
-                                <button class="botao botao-principal" disabled>Baixar PDF</button>
-                                <button class="botao botao-principal" disabled>Ler aqui</button>
-                                <button class="botao botao-principal" disabled>Escutar áudio</button>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
+                <!-- Mesma coisa da seção de cima, com a lista LIVROS_ES. Os títulos
+                     ficam em português e as capas continuam em espanhol. -->
+                <div class="livros-grid" id="gradeLivrosEs"></div>
 
             </div>
         </section>
@@ -714,7 +417,7 @@
 
     <!-- Lista dos áudios, vídeos e temas. É AQUI que se escreve o título e a
          descrição de cada um. Precisa vir antes do script.js. -->
-    <script src="conteudos.js?v=2"></script>
+    <script src="conteudos.js?v=3"></script>
     <script src="script.js?v=12"></script>
 
     <!-- Busca no painel o que foi escrito pelo admin e redesenha as três
@@ -722,7 +425,7 @@
          ligado, ou o Supabase estiver fora do ar, nada acontece e fica o
          conteúdo do conteudos.js. -->
     <script src="js/config.js?v=1"></script>
-    <script src="js/conteudo-remoto.js?v=1"></script>
+    <script src="js/conteudo-remoto.js?v=2"></script>
 </body>
 
 </html>

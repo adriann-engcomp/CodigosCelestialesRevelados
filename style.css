@@ -2029,3 +2029,113 @@ input[name="_gotcha"] {
         padding: 12px 0;
     }
 }
+
+/* ---- os passos numerados do formulário do painel ---- */
+
+.admin-passo {
+    margin-top: 18px;
+    padding: 16px 18px 20px;
+    background: rgba(0, 0, 0, 0.14);
+    border-radius: 3px;
+}
+
+.admin-passo-titulo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--fonte-titulo);
+    font-weight: normal;
+    font-size: 1.05rem;
+    color: #fff;
+}
+
+.admin-passo-num {
+    flex: 0 0 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--fonte-texto);
+    font-size: 0.8rem;
+    color: #0d3169;
+    background: var(--dourado);
+    border-radius: 50%;
+}
+
+.admin-passo-ajuda {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--texto-fraco);
+}
+
+/* ---- o que já está guardado num campo de arquivo ---- */
+
+.admin-arquivo-estado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+    font-size: 0.84rem;
+    color: var(--texto-fraco);
+}
+
+.admin-arquivo-vazio {
+    font-style: italic;
+}
+
+.admin-arquivo-nome {
+    flex: 1 1 auto;
+    color: #fff;
+    /* endereço comprido não empurra o botão para fora */
+    overflow-wrap: anywhere;
+}
+
+.admin-arquivo-mini {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 62px;
+    object-fit: cover;
+    border: 1px solid var(--borda);
+    border-radius: 2px;
+}
+
+.admin-arquivo-tirar {
+    flex: 0 0 auto;
+    padding: 5px 12px;
+    font-size: 0.74rem;
+    color: var(--texto-fraco);
+    background: none;
+    border: 1px solid var(--borda);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.admin-arquivo-tirar:hover {
+    color: #fff;
+    border-color: var(--dourado);
+}
+
+/* ---- o "ou colar um endereço", fechado por padrão ---- */
+
+.admin-arquivo-endereco {
+    margin-top: 10px;
+}
+
+.admin-arquivo-endereco summary {
+    font-size: 0.78rem;
+    color: var(--dourado);
+    cursor: pointer;
+}
+
+.admin-arquivo-endereco input {
+    width: 100%;
+    margin-top: 8px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid var(--borda);
+    border-radius: 2px;
+}

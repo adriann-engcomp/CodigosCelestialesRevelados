@@ -5,10 +5,10 @@
 
      1. a pessoa entra com a conta do Google
      2. o painel confere se o e-mail dela está na tabela admins
-     3. se estiver, mostra os 36 espaços de cada seção para editar
+     3. se estiver, mostra os espaços daquela seção para editar
      4. cada "Salvar" grava uma linha na tabela conteudos
      5. cada arquivo enviado vai para o espaço "arquivos" e o
-        endereço dele é preenchido sozinho no campo
+        endereço dele fica guardado no campo certo
 
    Quem decide o que pode ou não pode são as regras do banco,
    criadas pelo supabase/esquema.sql. Este arquivo só mostra a
@@ -30,26 +30,49 @@ const estado = document.getElementById("estado");
 const lista = document.getElementById("lista");
 const abas = document.getElementById("abas");
 
-/* O que cada seção chama as suas coisas, para os rótulos saírem
-   em português certo em vez de "audio 1", "tema 1". */
+/* Como cada seção chama as suas coisas. Fica tudo num lugar só para
+   os rótulos saírem em português certo, e não "audio 1", "tema 1". */
 const SECOES = {
     audio: {
         rotulo: "Áudio",
-        midia: "Endereço do áudio (link do YouTube, do Internet Archive, ou arquivo enviado)",
+        tituloMidia: "O áudio",
+        ajudaMidia: "Arquivo grande (livro inteiro) fica melhor no YouTube ou no Internet Archive: envie lá e cole o endereço aqui.",
+        oQue: "o áudio",
         aceita: "audio/*",
         temImagem: false
     },
     video: {
         rotulo: "Vídeo",
-        midia: "Link do vídeo no YouTube (o endereço inteiro ou só o código)",
+        tituloMidia: "O vídeo",
+        ajudaMidia: "O vídeo fica no YouTube; aqui vai só o endereço dele.",
         aceita: null,
         temImagem: false
     },
     tema: {
         rotulo: "Texto",
-        midia: "PDF do texto (envie o arquivo abaixo)",
+        tituloMidia: "O arquivo do texto",
+        ajudaMidia: "Em PDF. É o que a pessoa vai baixar, ler na tela e escutar.",
+        oQue: "o PDF",
         aceita: ".pdf",
         temImagem: true
+    },
+    "livro-pt": {
+        rotulo: "Livro",
+        tituloMidia: "O arquivo do livro",
+        ajudaMidia: "Em PDF. Enquanto estiver vazio, o livro aparece no site com a faixa “arquivo em breve”.",
+        oQue: "o PDF",
+        aceita: ".pdf",
+        temImagem: true,
+        eLivro: true
+    },
+    "livro-es": {
+        rotulo: "Livro",
+        tituloMidia: "O arquivo do livro",
+        ajudaMidia: "Em PDF. Enquanto estiver vazio, o livro aparece no site com a faixa “arquivo em breve”.",
+        oQue: "o PDF",
+        aceita: ".pdf",
+        temImagem: true,
+        eLivro: true
     }
 };
 
@@ -57,7 +80,14 @@ let cliente = null;
 let usuario = null;
 let tipoAtual = "audio";
 
-/* ---------- 2. Avisos na tela ---------- */
+/* ---------- 2. Ajudinhas ---------- */
+
+function criar(etiqueta, classe, texto) {
+    const el = document.createElement(etiqueta);
+    if (classe) el.className = classe;
+    if (texto !== undefined && texto !== null) el.textContent = texto;
+    return el;
+}
 
 function mostrar(qual) {
     telaEntrar.hidden = qual !== "entrar";
@@ -93,7 +123,7 @@ async function comecar() {
         mostrar("entrar");
     }
 
-    cliente.auth.onAuthStateChange((evento, sessao) => {
+    cliente.auth.onAuthStateChange((evento) => {
         if (evento === "SIGNED_OUT") {
             usuario = null;
             adminEmail.textContent = "";
@@ -171,7 +201,7 @@ abas.addEventListener("click", async (e) => {
     await carregar(tipoAtual);
 });
 
-/* ---------- 6. Carregar e desenhar os espaços ---------- */
+/* ---------- 6. Carregar os espaços ---------- */
 
 async function carregar(tipo) {
     dizer("Carregando…");
@@ -188,25 +218,23 @@ async function carregar(tipo) {
         return;
     }
 
+    if (!data.length) {
+        dizer("Nenhum espaço nesta seção ainda. Falta rodar o supabase/esquema-livros.sql.", true);
+        return;
+    }
+
     data.forEach((item) => lista.appendChild(cartao(item)));
     dizer(data.length + " espaços. Clique em um para escrever.");
 }
+
+/* ---------- 7. As peças do formulário ---------- */
 
 function campo(rotulo, valor, linhas, ajuda) {
     const bloco = document.createElement("label");
     bloco.className = "admin-campo";
 
-    const titulo = document.createElement("span");
-    titulo.className = "admin-campo-titulo";
-    titulo.textContent = rotulo;
-    bloco.appendChild(titulo);
-
-    if (ajuda) {
-        const dica = document.createElement("span");
-        dica.className = "admin-campo-ajuda";
-        dica.textContent = ajuda;
-        bloco.appendChild(dica);
-    }
+    bloco.appendChild(criar("span", "admin-campo-titulo", rotulo));
+    if (ajuda) bloco.appendChild(criar("span", "admin-campo-ajuda", ajuda));
 
     const entrada = document.createElement(linhas > 1 ? "textarea" : "input");
     if (linhas > 1) entrada.rows = linhas;
@@ -217,126 +245,33 @@ function campo(rotulo, valor, linhas, ajuda) {
     return bloco;
 }
 
-function cartao(item) {
-    const secao = SECOES[item.tipo];
+/* Um passo do formulário: um número, um título e o que vai dentro. */
+function passo(numero, titulo, ajuda) {
+    const bloco = criar("section", "admin-passo");
 
-    const caixa = document.createElement("article");
-    caixa.className = "admin-item";
+    const cabeca = criar("h4", "admin-passo-titulo");
+    cabeca.appendChild(criar("span", "admin-passo-num", numero));
+    cabeca.appendChild(criar("span", null, titulo));
+    bloco.appendChild(cabeca);
 
-    /* a linha que fica sempre visível */
-    const topo = document.createElement("button");
-    topo.className = "admin-item-topo";
-    topo.innerHTML =
-        '<span class="admin-item-num">' + item.posicao + "</span>" +
-        '<span class="admin-item-nome"></span>' +
-        '<span class="admin-item-sinal"></span>';
-    topo.querySelector(".admin-item-nome").textContent =
-        item.titulo || secao.rotulo + " " + item.posicao;
+    if (ajuda) bloco.appendChild(criar("p", "admin-passo-ajuda", ajuda));
 
-    const sinal = topo.querySelector(".admin-item-sinal");
-    sinal.textContent = item.midia ? "pronto" : "vazio";
-    sinal.classList.toggle("vazio", !item.midia);
-
-    caixa.appendChild(topo);
-
-    /* o formulário, que abre ao clicar */
-    const corpo = document.createElement("div");
-    corpo.className = "admin-item-corpo";
-    corpo.hidden = true;
-
-    const fTitulo = campo("Título", item.titulo, 1);
-    const fResumo = campo("Descrição curta", item.resumo, 3,
-        "2 ou 3 frases. É o que aparece no cartão.");
-    const fDescricao = campo("Descrição completa", item.descricao, 6,
-        "Só aparece quando a pessoa aperta o botão. Pode ficar vazia.");
-    const fMidia = campo(secao.midia, item.midia, 1);
-
-    corpo.appendChild(fTitulo);
-    corpo.appendChild(fResumo);
-    corpo.appendChild(fDescricao);
-    corpo.appendChild(fMidia);
-
-    let fImagem = null;
-    if (secao.temImagem) {
-        fImagem = campo("Desenho da capa", item.imagem, 1);
-        corpo.appendChild(fImagem);
-        corpo.appendChild(areaEnvio(item, "imagem", "image/*", fImagem.entrada));
-    }
-
-    if (secao.aceita) {
-        corpo.appendChild(areaEnvio(item, "midia", secao.aceita, fMidia.entrada));
-    }
-
-    /* salvar */
-    const acoes = document.createElement("div");
-    acoes.className = "admin-item-acoes";
-
-    const salvar = document.createElement("button");
-    salvar.className = "botao botao-principal";
-    salvar.textContent = "Salvar";
-
-    const recado = document.createElement("span");
-    recado.className = "admin-recado";
-
-    acoes.appendChild(salvar);
-    acoes.appendChild(recado);
-    corpo.appendChild(acoes);
-
-    if (item.atualizado_por) {
-        const quando = document.createElement("p");
-        quando.className = "admin-carimbo";
-        quando.textContent =
-            "Última alteração: " + item.atualizado_por + " em " +
-            new Date(item.atualizado_em).toLocaleString("pt-BR");
-        corpo.appendChild(quando);
-    }
-
-    salvar.addEventListener("click", async () => {
-        salvar.disabled = true;
-        recado.textContent = "Salvando…";
-        recado.classList.remove("erro");
-
-        const novo = {
-            tipo: item.tipo,
-            posicao: item.posicao,
-            titulo: fTitulo.entrada.value.trim(),
-            resumo: fResumo.entrada.value.trim(),
-            descricao: fDescricao.entrada.value.trim(),
-            midia: fMidia.entrada.value.trim(),
-            imagem: fImagem ? fImagem.entrada.value.trim() : item.imagem
-        };
-
-        const { error } = await cliente
-            .from("conteudos")
-            .upsert(novo, { onConflict: "tipo,posicao" });
-
-        salvar.disabled = false;
-
-        if (error) {
-            recado.textContent = "Não salvou: " + error.message;
-            recado.classList.add("erro");
-            return;
-        }
-
-        recado.textContent = "Salvo.";
-        topo.querySelector(".admin-item-nome").textContent =
-            novo.titulo || secao.rotulo + " " + item.posicao;
-        sinal.textContent = novo.midia ? "pronto" : "vazio";
-        sinal.classList.toggle("vazio", !novo.midia);
-
-        setTimeout(() => { recado.textContent = ""; }, 3000);
-    });
-
-    topo.addEventListener("click", () => {
-        corpo.hidden = !corpo.hidden;
-        caixa.classList.toggle("aberto", !corpo.hidden);
-    });
-
-    caixa.appendChild(corpo);
-    return caixa;
+    return bloco;
 }
 
-/* ---------- 7. Envio de arquivo: arrastar ou escolher ---------- */
+/* Tira o nome do arquivo de um endereço comprido, para a tela mostrar
+   "livro-base.pdf" em vez da linha inteira do Supabase. */
+function nomeDoArquivo(endereco) {
+    if (!endereco) return "";
+    if (/youtube|youtu\.be|archive\.org/i.test(endereco)) return endereco;
+
+    const limpo = endereco.split("?")[0].split("/").pop();
+    try {
+        return decodeURIComponent(limpo) || endereco;
+    } catch (e) {
+        return limpo || endereco;
+    }
+}
 
 /* Tira acento, espaço e maiúscula do nome do arquivo. No endereço do
    site, espaço vira %20 e acento vira %C3%B3 — melhor não ter. */
@@ -349,27 +284,111 @@ function nomeLimpo(nome) {
         .replace(/^-+|-+$/g, "");
 }
 
-function areaEnvio(item, coluna, aceita, destino) {
-    const area = document.createElement("div");
-    area.className = "admin-envio";
+/* ---------- O bloco de um arquivo ----------
 
-    const texto = document.createElement("p");
-    texto.className = "admin-envio-texto";
-    texto.textContent = "Arraste o arquivo para cá, ou clique para escolher.";
+   Três partes, de cima para baixo:
+     1. a área de arrastar, que diz o que recebe
+     2. o que já está guardado: o nome do arquivo e, se for imagem, a
+        miniatura, com um botão de tirar
+     3. um "ou colar um endereço", fechado, para quem prefere apontar
+        para o YouTube ou o Internet Archive em vez de enviar
 
-    const entrada = document.createElement("input");
-    entrada.type = "file";
-    entrada.accept = aceita;
-    entrada.hidden = true;
+   O endereço comprido fica guardado num campo escondido: quem olha a
+   tela vê o nome do arquivo, não a linha gigante.                     */
+function blocoArquivo(item, coluna, aceita, oQue, valorInicial, ehImagem) {
+    const bloco = criar("div", "admin-arquivo");
 
+    const guardado = document.createElement("input");
+    guardado.type = "hidden";
+    guardado.value = valorInicial || "";
+
+    const convite = "Arraste aqui " + oQue + ", ou clique para escolher.";
+
+    const area = criar("div", "admin-envio");
+    const texto = criar("p", "admin-envio-texto", convite);
+    const escolher = document.createElement("input");
+    escolher.type = "file";
+    escolher.accept = aceita;
+    escolher.hidden = true;
     area.appendChild(texto);
-    area.appendChild(entrada);
+    area.appendChild(escolher);
+
+    const situacao = criar("div", "admin-arquivo-estado");
+
+    const detalhes = document.createElement("details");
+    detalhes.className = "admin-arquivo-endereco";
+    detalhes.appendChild(criar("summary", null, "Ou colar um endereço"));
+
+    const colar = document.createElement("input");
+    colar.type = "text";
+    colar.value = valorInicial || "";
+    colar.placeholder = "https://…";
+    detalhes.appendChild(colar);
+
+    function mostrarSituacao() {
+        situacao.innerHTML = "";
+        const valor = guardado.value.trim();
+
+        if (!valor) {
+            situacao.appendChild(criar("span", "admin-arquivo-vazio", "Nenhum arquivo ainda."));
+            return;
+        }
+
+        if (ehImagem) {
+            const mini = document.createElement("img");
+            mini.className = "admin-arquivo-mini";
+            mini.src = valor;
+            mini.alt = "";
+            situacao.appendChild(mini);
+        }
+
+        situacao.appendChild(criar("span", "admin-arquivo-nome", nomeDoArquivo(valor)));
+
+        const tirar = criar("button", "admin-arquivo-tirar", "Tirar");
+        tirar.type = "button";
+        tirar.addEventListener("click", () => {
+            guardado.value = "";
+            colar.value = "";
+            texto.textContent = convite;
+            area.classList.remove("erro");
+            mostrarSituacao();
+        });
+        situacao.appendChild(tirar);
+    }
+
+    colar.addEventListener("input", () => {
+        guardado.value = colar.value.trim();
+        mostrarSituacao();
+    });
+
+    /* O "accept" só filtra a janela de escolher arquivo; quem arrasta
+       passa por cima dele. Então a conferência é feita aqui. */
+    function tipoErrado(arquivo) {
+        if (aceita === ".pdf" && !/\.pdf$/i.test(arquivo.name)) {
+            return "Esta área é só para PDF. “" + arquivo.name + "” não é um PDF.";
+        }
+        if (aceita === "image/*" && !arquivo.type.startsWith("image/")) {
+            return "Esta área é só para imagem. “" + arquivo.name + "” não é uma imagem.";
+        }
+        if (aceita === "audio/*" && !arquivo.type.startsWith("audio/")) {
+            return "Esta área é só para áudio. “" + arquivo.name + "” não é um áudio.";
+        }
+        return "";
+    }
 
     async function enviar(arquivo) {
         if (!arquivo) return;
 
-        texto.textContent = "Enviando " + arquivo.name + "…";
+        const problema = tipoErrado(arquivo);
+        if (problema) {
+            texto.textContent = problema;
+            area.classList.add("erro");
+            return;
+        }
+
+        area.classList.remove("erro");
         area.classList.add("enviando");
+        texto.textContent = "Enviando " + arquivo.name + "…";
 
         const caminho =
             item.tipo + "/" + coluna + "-" + item.posicao + "-" +
@@ -388,34 +407,163 @@ function areaEnvio(item, coluna, aceita, destino) {
         }
 
         const { data } = cliente.storage.from("arquivos").getPublicUrl(caminho);
-        destino.value = data.publicUrl;
-
-        area.classList.remove("erro");
-        texto.textContent = "Enviado. Agora é só apertar Salvar.";
+        guardado.value = data.publicUrl;
+        colar.value = data.publicUrl;
+        texto.textContent = "Enviado. Agora é só apertar Salvar, lá embaixo.";
+        mostrarSituacao();
     }
 
-    area.addEventListener("click", () => entrada.click());
-    entrada.addEventListener("change", () => enviar(entrada.files[0]));
+    area.addEventListener("click", () => escolher.click());
+    escolher.addEventListener("change", () => enviar(escolher.files[0]));
 
     ["dragenter", "dragover"].forEach((e) =>
-        area.addEventListener(e, (ev) => {
-            ev.preventDefault();
-            area.classList.add("sobre");
-        })
+        area.addEventListener(e, (ev) => { ev.preventDefault(); area.classList.add("sobre"); })
     );
-
     ["dragleave", "drop"].forEach((e) =>
-        area.addEventListener(e, (ev) => {
-            ev.preventDefault();
-            area.classList.remove("sobre");
-        })
+        area.addEventListener(e, (ev) => { ev.preventDefault(); area.classList.remove("sobre"); })
     );
+    area.addEventListener("drop", (ev) => enviar(ev.dataTransfer.files[0]));
 
-    area.addEventListener("drop", (ev) => {
-        enviar(ev.dataTransfer.files[0]);
+    bloco.appendChild(area);
+    bloco.appendChild(situacao);
+    bloco.appendChild(detalhes);
+    bloco.appendChild(guardado);
+
+    mostrarSituacao();
+
+    bloco.valor = () => guardado.value.trim();
+    return bloco;
+}
+
+/* ---------- O cartão de um espaço ---------- */
+
+function cartao(item) {
+    const secao = SECOES[item.tipo];
+
+    const caixa = criar("article", "admin-item");
+
+    /* a linha que fica sempre visível */
+    const topo = criar("button", "admin-item-topo");
+    topo.appendChild(criar("span", "admin-item-num", item.posicao));
+
+    const nome = criar("span", "admin-item-nome",
+        item.titulo || secao.rotulo + " " + item.posicao);
+    topo.appendChild(nome);
+
+    const sinal = criar("span", "admin-item-sinal", item.midia ? "pronto" : "vazio");
+    sinal.classList.toggle("vazio", !item.midia);
+    topo.appendChild(sinal);
+
+    caixa.appendChild(topo);
+
+    const corpo = criar("div", "admin-item-corpo");
+    corpo.hidden = true;
+
+    /* ----- passo 1: o texto ----- */
+    const p1 = passo("1", secao.eLivro ? "O livro" : "O que é");
+
+    const fTitulo = campo(
+        secao.eLivro ? "Nome do livro (em português)" : "Título",
+        item.titulo, 1);
+
+    const fResumo = secao.eLivro
+        ? campo("Nome traduzido", item.resumo, 1,
+            "Aparece entre parênteses abaixo do nome. Pode ficar vazio.")
+        : campo("Descrição curta", item.resumo, 3,
+            "2 ou 3 frases. É o que aparece no cartão, no site.");
+
+    const fDescricao = campo("Descrição completa", item.descricao, 5,
+        secao.eLivro
+            ? "Ainda não aparece no site; fica guardada para depois."
+            : "Só aparece quando a pessoa aperta o botão. Pode ficar vazia.");
+
+    p1.appendChild(fTitulo);
+    p1.appendChild(fResumo);
+    p1.appendChild(fDescricao);
+    corpo.appendChild(p1);
+
+    /* ----- passo 2: o arquivo, ou o endereço do vídeo ----- */
+    const p2 = passo("2", secao.tituloMidia, secao.ajudaMidia);
+    let bMidia = null;
+    let fLink = null;
+
+    if (secao.aceita) {
+        bMidia = blocoArquivo(item, "midia", secao.aceita, secao.oQue, item.midia, false);
+        p2.appendChild(bMidia);
+    } else {
+        fLink = campo("Endereço do vídeo", item.midia, 1,
+            "Cole o endereço inteiro do YouTube, ou só o código dele.");
+        p2.appendChild(fLink);
+    }
+    corpo.appendChild(p2);
+
+    /* ----- passo 3: a capa ----- */
+    let bImagem = null;
+    if (secao.temImagem) {
+        const p3 = passo("3", secao.eLivro ? "A capa do livro" : "O desenho da capa",
+            "Aparece no formato de capa de livro, em pé.");
+        bImagem = blocoArquivo(item, "imagem", "image/*",
+            secao.eLivro ? "a capa" : "o desenho", item.imagem, true);
+        p3.appendChild(bImagem);
+        corpo.appendChild(p3);
+    }
+
+    /* ----- salvar ----- */
+    const acoes = criar("div", "admin-item-acoes");
+    const salvar = criar("button", "botao botao-principal", "Salvar");
+    const recado = criar("span", "admin-recado");
+    acoes.appendChild(salvar);
+    acoes.appendChild(recado);
+    corpo.appendChild(acoes);
+
+    if (item.atualizado_por) {
+        corpo.appendChild(criar("p", "admin-carimbo",
+            "Última alteração: " + item.atualizado_por + " em " +
+            new Date(item.atualizado_em).toLocaleString("pt-BR")));
+    }
+
+    salvar.addEventListener("click", async () => {
+        salvar.disabled = true;
+        recado.textContent = "Salvando…";
+        recado.classList.remove("erro");
+
+        const novo = {
+            tipo: item.tipo,
+            posicao: item.posicao,
+            titulo: fTitulo.entrada.value.trim(),
+            resumo: fResumo.entrada.value.trim(),
+            descricao: fDescricao.entrada.value.trim(),
+            midia: bMidia ? bMidia.valor() : fLink.entrada.value.trim(),
+            imagem: bImagem ? bImagem.valor() : (item.imagem || "")
+        };
+
+        const { error } = await cliente
+            .from("conteudos")
+            .upsert(novo, { onConflict: "tipo,posicao" });
+
+        salvar.disabled = false;
+
+        if (error) {
+            recado.textContent = "Não salvou: " + error.message;
+            recado.classList.add("erro");
+            return;
+        }
+
+        recado.textContent = "Salvo.";
+        nome.textContent = novo.titulo || secao.rotulo + " " + item.posicao;
+        sinal.textContent = novo.midia ? "pronto" : "vazio";
+        sinal.classList.toggle("vazio", !novo.midia);
+
+        setTimeout(() => { recado.textContent = ""; }, 3000);
     });
 
-    return area;
+    topo.addEventListener("click", () => {
+        corpo.hidden = !corpo.hidden;
+        caixa.classList.toggle("aberto", !corpo.hidden);
+    });
+
+    caixa.appendChild(corpo);
+    return caixa;
 }
 
 /* ---------- 8. Roda ao abrir ---------- */

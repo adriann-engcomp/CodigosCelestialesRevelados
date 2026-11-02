@@ -27,13 +27,31 @@ function converter(linha, reserva) {
     };
 }
 
+/* Mesma coisa, no formato que os livros usam. */
+function converterLivro(linha, reserva) {
+    const base = reserva || {};
+    return {
+        titulo: linha.titulo || base.titulo || "",
+        traducao: linha.resumo || "",
+        pdf: linha.midia || "",
+        capa: linha.imagem || ""
+    };
+}
+
 /* Troca o conteúdo de uma lista pelas linhas do banco, sem mudar o
    tamanho dela: a posição 7 do banco vira o sétimo item da lista. */
-function aplicarNaLista(lista, linhas) {
+function aplicarNaLista(lista, linhas, como) {
+    const passar = como || converter;
+
     linhas.forEach((linha) => {
         const i = linha.posicao - 1;
+
         if (i >= 0 && i < lista.length) {
-            lista[i] = converter(linha, lista[i]);
+            lista[i] = passar(linha, lista[i]);
+        } else if (i === lista.length) {
+            /* o painel ganhou um espaço a mais que a reserva não tinha:
+               acrescenta no fim, em vez de ignorar */
+            lista.push(passar(linha, null));
         }
     });
 }
@@ -74,10 +92,15 @@ async function carregarConteudoRemoto() {
     aplicarNaLista(AUDIOS, linhas.filter((l) => l.tipo === "audio"));
     aplicarNaLista(VIDEOS, linhas.filter((l) => l.tipo === "video"));
     aplicarNaLista(TEMAS, linhas.filter((l) => l.tipo === "tema"));
+    aplicarNaLista(LIVROS_PT, linhas.filter((l) => l.tipo === "livro-pt"), converterLivro);
+    aplicarNaLista(LIVROS_ES, linhas.filter((l) => l.tipo === "livro-es"), converterLivro);
 
     redesenhar(AUDIOS, "paginasAudios", "paginacaoAudios", cartaoDeAudio);
     redesenhar(VIDEOS, "paginasVideos", "paginacaoVideos", cartaoDeVideo);
     redesenhar(TEMAS, "paginasTemas", "paginacaoTemas", cartaoDeTema);
+
+    montarLivros(LIVROS_PT, "gradeLivrosPt", "pt-BR");
+    montarLivros(LIVROS_ES, "gradeLivrosEs", "es-ES");
 
     /* Os cartões de vídeo são novos, então precisam ganhar de novo o
        clique que abre o player do YouTube. O mesmo vale para o leitor
