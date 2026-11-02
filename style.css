@@ -2211,3 +2211,37 @@ input[name="_gotcha"] {
     color: #ffc9b4;
     border-color: #ffc9b4;
 }
+
+/* ---- as saídas de emergência do cartão ----
+   Desfazer e Esvaziar ficam discretos, à direita do Salvar; Apagar fica
+   por último e muda de cor ao passar o ponteiro, porque não tem volta. */
+.admin-secundario {
+    padding: 8px 14px;
+    font-family: inherit;
+    font-size: 0.76rem;
+    color: var(--texto-fraco);
+    background: none;
+    border: 1px solid var(--borda);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.admin-secundario:hover {
+    color: #fff;
+    border-color: var(--dourado);
+}
+
+/* o primeiro dos secundários é que empurra o grupo para a direita */
+.admin-item-acoes .admin-secundario:first-of-type {
+    margin-left: auto;
+}
+
+.admin-apagar {
+    margin-left: 0;
+}
+
+.admin-item-acoes {
+    flex-wrap: wrap;
+    gap: 10px;
+}

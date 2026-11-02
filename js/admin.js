@@ -500,6 +500,16 @@ function blocoArquivo(item, coluna, aceita, oQue, valorInicial, ehImagem) {
     mostrarSituacao();
 
     bloco.valor = () => guardado.value.trim();
+
+    /* usado pelos botoes de desfazer e de esvaziar */
+    bloco.repor = (novoValor) => {
+        guardado.value = novoValor || "";
+        colar.value = novoValor || "";
+        texto.textContent = convite;
+        area.classList.remove("erro");
+        mostrarSituacao();
+    };
+
     return bloco;
 }
 
@@ -576,19 +586,96 @@ function cartao(item) {
         corpo.appendChild(p3);
     }
 
-    /* ----- salvar ----- */
+    /* ----- salvar, e as saídas de emergência -----
+
+       São três coisas diferentes, de propósito:
+
+         Desfazer   volta os campos para o que está salvo. Serve para
+                    quando a pessoa se enrolou digitando e ainda não
+                    salvou. Não mexe no banco.
+         Esvaziar   limpa tudo e salva vazio. Serve para quando ela
+                    salvou errado: o espaço continua, mas volta a ficar
+                    "vazio" no site.
+         Apagar     some com o espaço inteiro. Esse não tem volta.      */
     const acoes = criar("div", "admin-item-acoes");
     const salvar = criar("button", "botao botao-principal", "Salvar");
     const recado = criar("span", "admin-recado");
 
-    /* Apagar fica do lado direito e discreto, longe do Salvar, porque
-       some com o espaço do site e não tem desfazer. */
+    const desfazer = criar("button", "admin-secundario", "Desfazer");
+    desfazer.type = "button";
+    desfazer.title = "Volta os campos para o que está salvo";
+
+    const esvaziar = criar("button", "admin-secundario", "Esvaziar");
+    esvaziar.type = "button";
+    esvaziar.title = "Limpa tudo e salva vazio, mantendo o espaço";
+
     const apagar = criar("button", "admin-apagar", "Apagar este espaço");
     apagar.type = "button";
 
     acoes.appendChild(salvar);
     acoes.appendChild(recado);
+    acoes.appendChild(desfazer);
+    acoes.appendChild(esvaziar);
     acoes.appendChild(apagar);
+
+    /* repoe os campos com um conjunto de valores */
+    function repor(valores) {
+        fTitulo.entrada.value = valores.titulo || "";
+        fResumo.entrada.value = valores.resumo || "";
+        fDescricao.entrada.value = valores.descricao || "";
+
+        if (bMidia) bMidia.repor(valores.midia);
+        if (fLink) fLink.entrada.value = valores.midia || "";
+        if (bImagem) bImagem.repor(valores.imagem);
+    }
+
+    desfazer.addEventListener("click", () => {
+        repor(item);
+        recado.textContent = "Campos voltaram ao que está salvo.";
+        recado.classList.remove("erro");
+        setTimeout(() => { recado.textContent = ""; }, 3000);
+    });
+
+    esvaziar.addEventListener("click", async () => {
+        if (!window.confirm(
+            "Esvaziar o espaço " + item.posicao + "? " +
+            "O espaço continua, mas tudo o que está escrito nele é apagado."
+        )) return;
+
+        repor({});
+        esvaziar.disabled = true;
+        recado.textContent = "Esvaziando…";
+        recado.classList.remove("erro");
+
+        const vazio = {
+            tipo: item.tipo,
+            posicao: item.posicao,
+            titulo: secao.rotulo + " " + item.posicao,
+            resumo: "",
+            descricao: "",
+            midia: "",
+            imagem: ""
+        };
+
+        const { error } = await cliente
+            .from("conteudos")
+            .upsert(vazio, { onConflict: "tipo,posicao" });
+
+        esvaziar.disabled = false;
+
+        if (error) {
+            recado.textContent = "Não esvaziou: " + error.message;
+            recado.classList.add("erro");
+            return;
+        }
+
+        repor(vazio);
+        nome.textContent = vazio.titulo;
+        sinal.textContent = "vazio";
+        sinal.classList.add("vazio");
+        recado.textContent = "Esvaziado.";
+        setTimeout(() => { recado.textContent = ""; }, 3000);
+    });
     corpo.appendChild(acoes);
 
     apagar.addEventListener("click", async () => {
