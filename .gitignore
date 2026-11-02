@@ -1,0 +1,11 @@
+# Arquivos que ficam SÓ no computador: não sobem para o GitHub e,
+# portanto, não aparecem no site publicado.
+#
+# O arquivo continua na pasta normalmente — o Git é que passa a ignorar.
+# Para voltar a publicar algum, é só apagar a linha daqui.
+
+# a lista de conferência das alterações (uso interno)
+CHECKLIST-SEGUNDAS-ALTERACOES.md
+
+# scripts que geram a lista de conferência (uso interno)
+ferramentas/

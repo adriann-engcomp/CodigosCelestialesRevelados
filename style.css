@@ -394,13 +394,12 @@ a {
     color: var(--texto-fraco);
 }
 
-/* Em tela estreita as frases viram uma coluna só. Lado a lado num
-   celular daria duas colunas de 4 ou 5 palavras, ilegíveis; no tablet
-   e no notebook elas continuam uma de cada lado. */
+/* As frases 2 e 3 ficam lado a lado em TODAS as telas, inclusive no
+   celular. Para caber, no celular elas diminuem de tamanho e ganham
+   separação de sílabas (ver mais abaixo, em CELULARES PEQUENOS). */
 @media (max-width: 720px) {
 
-    .texto-duas-colunas,
-    .capa-colunas {
+    .texto-duas-colunas {
         grid-template-columns: 1fr;
     }
 
@@ -1596,9 +1595,19 @@ input[name="_gotcha"] {
         margin-bottom: 26px;
     }
 
+    /* Com a coluna estreita, a separação de sílabas evita os buracos
+       que apareceriam no fim de cada linha. Precisa do lang="pt-BR"
+       que está lá no <html>. */
+    .capa-colunas {
+        gap: 18px 14px;
+    }
+
     .capa-frase-2,
     .capa-frase-3 {
-        font-size: 0.95rem;
+        font-size: 0.82rem;
+        line-height: 1.5;
+        -webkit-hyphens: auto;
+        hyphens: auto;
     }
 
     .grade-itens {
