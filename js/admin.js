@@ -224,7 +224,62 @@ async function carregar(tipo) {
     }
 
     data.forEach((item) => lista.appendChild(cartao(item)));
+
+    /* A última posição usada. O espaço novo entra logo depois dela. */
+    const ultima = data.reduce((maior, i) => Math.max(maior, i.posicao), 0);
+    lista.appendChild(botaoAcrescentar(tipo, ultima));
+
     dizer(data.length + " espaços. Clique em um para escrever.");
+}
+
+/* Acrescenta um espaço no fim da seção. Fica no fim da lista, que é
+   onde a pessoa procura depois de rolar os que já existem. */
+function botaoAcrescentar(tipo, ultima) {
+    const secao = SECOES[tipo];
+    const caixa = criar("div", "admin-acrescentar");
+
+    const botao = criar("button", "admin-acrescentar-botao",
+        "+ Acrescentar " + (secao.eLivro ? "um livro" : "um espaço de " + secao.rotulo.toLowerCase()));
+    botao.type = "button";
+
+    const recado = criar("span", "admin-recado");
+
+    botao.addEventListener("click", async () => {
+        botao.disabled = true;
+        recado.textContent = "Criando…";
+        recado.classList.remove("erro");
+
+        const posicao = ultima + 1;
+
+        const { error } = await cliente.from("conteudos").insert({
+            tipo: tipo,
+            posicao: posicao,
+            titulo: secao.rotulo + " " + posicao
+        });
+
+        botao.disabled = false;
+
+        if (error) {
+            recado.textContent = "Não deu: " + error.message;
+            recado.classList.add("erro");
+            return;
+        }
+
+        recado.textContent = "";
+        await carregar(tipo);
+
+        /* abre o espaço novo já aberto, para a pessoa escrever na hora */
+        const cartoes = lista.querySelectorAll(".admin-item-topo");
+        const ultimo = cartoes[cartoes.length - 1];
+        if (ultimo) {
+            ultimo.click();
+            ultimo.scrollIntoView({ block: "center", behavior: "smooth" });
+        }
+    });
+
+    caixa.appendChild(botao);
+    caixa.appendChild(recado);
+    return caixa;
 }
 
 /* ---------- 7. As peças do formulário ---------- */
@@ -302,14 +357,27 @@ function blocoArquivo(item, coluna, aceita, oQue, valorInicial, ehImagem) {
     guardado.type = "hidden";
     guardado.value = valorInicial || "";
 
-    const convite = "Arraste aqui " + oQue + ", ou clique para escolher.";
+    const convite = "ou arraste " + oQue + " para cá";
 
     const area = criar("div", "admin-envio");
-    const texto = criar("p", "admin-envio-texto", convite);
+
+    /* A janela de arquivos já abre filtrada: pedindo PDF, a pessoa só vê
+       PDF na pasta dela. É o "accept" do input que faz isso. */
     const escolher = document.createElement("input");
     escolher.type = "file";
     escolher.accept = aceita;
     escolher.hidden = true;
+
+    const botao = criar("button", "admin-envio-botao", "Escolher " + oQue + " no computador");
+    botao.type = "button";
+    botao.addEventListener("click", (ev) => {
+        ev.stopPropagation();   // senão o clique da área dispara de novo
+        escolher.click();
+    });
+
+    const texto = criar("p", "admin-envio-texto", convite);
+
+    area.appendChild(botao);
     area.appendChild(texto);
     area.appendChild(escolher);
 
@@ -512,9 +580,42 @@ function cartao(item) {
     const acoes = criar("div", "admin-item-acoes");
     const salvar = criar("button", "botao botao-principal", "Salvar");
     const recado = criar("span", "admin-recado");
+
+    /* Apagar fica do lado direito e discreto, longe do Salvar, porque
+       some com o espaço do site e não tem desfazer. */
+    const apagar = criar("button", "admin-apagar", "Apagar este espaço");
+    apagar.type = "button";
+
     acoes.appendChild(salvar);
     acoes.appendChild(recado);
+    acoes.appendChild(apagar);
     corpo.appendChild(acoes);
+
+    apagar.addEventListener("click", async () => {
+        const nomeAtual = nome.textContent;
+        if (!window.confirm(
+            "Apagar o espaço " + item.posicao + " (" + nomeAtual + ")? " +
+            "Ele some do site, e não dá para desfazer."
+        )) return;
+
+        apagar.disabled = true;
+        recado.textContent = "Apagando…";
+
+        const { error } = await cliente
+            .from("conteudos")
+            .delete()
+            .eq("tipo", item.tipo)
+            .eq("posicao", item.posicao);
+
+        if (error) {
+            apagar.disabled = false;
+            recado.textContent = "Não apagou: " + error.message;
+            recado.classList.add("erro");
+            return;
+        }
+
+        await carregar(item.tipo);
+    });
 
     if (item.atualizado_por) {
         corpo.appendChild(criar("p", "admin-carimbo",

@@ -38,22 +38,25 @@ function converterLivro(linha, reserva) {
     };
 }
 
-/* Troca o conteúdo de uma lista pelas linhas do banco, sem mudar o
-   tamanho dela: a posição 7 do banco vira o sétimo item da lista. */
+/* O painel manda. Havendo qualquer linha no banco para aquela seção, a
+   lista passa a ser EXATAMENTE o que o painel tem: nem mais, nem menos.
+
+   É por isso que não dá para só trocar item por item pela posição: se
+   alguém apagar um espaço no painel, ou acrescentar um 37º, a lista
+   precisa encolher ou crescer junto. Sem linha nenhuma no banco (painel
+   ainda não ligado), fica a reserva do conteudos.js.                   */
 function aplicarNaLista(lista, linhas, como) {
+    if (!linhas.length) return;
+
     const passar = como || converter;
 
-    linhas.forEach((linha) => {
-        const i = linha.posicao - 1;
+    const novos = linhas
+        .slice()
+        .sort((a, b) => a.posicao - b.posicao)
+        .map((linha) => passar(linha, lista[linha.posicao - 1]));
 
-        if (i >= 0 && i < lista.length) {
-            lista[i] = passar(linha, lista[i]);
-        } else if (i === lista.length) {
-            /* o painel ganhou um espaço a mais que a reserva não tinha:
-               acrescenta no fim, em vez de ignorar */
-            lista.push(passar(linha, null));
-        }
-    });
+    lista.length = 0;
+    novos.forEach((item) => lista.push(item));
 }
 
 /* Apaga o que está na tela e manda o conteudos.js desenhar de novo. */
