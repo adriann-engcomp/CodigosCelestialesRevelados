@@ -25,6 +25,9 @@ const botaoEntrar = document.getElementById("botaoEntrar");
 const botaoSair = document.getElementById("botaoSair");
 const botaoSairOutra = document.getElementById("botaoSairOutra");
 const avisoEntrar = document.getElementById("avisoEntrar");
+const formEmail = document.getElementById("formEmail");
+const campoEmail = document.getElementById("campoEmail");
+const botaoEmail = document.getElementById("botaoEmail");
 const adminEmail = document.getElementById("adminEmail");
 const estado = document.getElementById("estado");
 const lista = document.getElementById("lista");
@@ -108,6 +111,8 @@ async function comecar() {
             "O painel ainda não foi ligado ao Supabase. Falta preencher o endereço e a " +
             "chave no arquivo js/config.js.";
         botaoEntrar.disabled = true;
+        botaoEmail.disabled = true;
+        campoEmail.disabled = true;
         return;
     }
 
@@ -177,6 +182,37 @@ botaoEntrar.addEventListener("click", async () => {
     if (error) {
         avisoEntrar.textContent = "Não deu para entrar: " + error.message;
     }
+});
+
+/* A segunda porta: um link enviado por e-mail. Não passa pelo Google,
+   então funciona com Yahoo, Outlook, o que for.
+
+   Entrar aqui NÃO dá permissão nenhuma: quem decide continua sendo a
+   tabela admins. Quem não estiver nela entra e vê "Conta sem permissão". */
+formEmail.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const endereco = campoEmail.value.trim();
+    if (!endereco) return;
+
+    botaoEmail.disabled = true;
+    avisoEntrar.textContent = "Enviando o link…";
+
+    const { error } = await cliente.auth.signInWithOtp({
+        email: endereco,
+        options: { emailRedirectTo: window.location.href.split("?")[0] }
+    });
+
+    botaoEmail.disabled = false;
+
+    if (error) {
+        avisoEntrar.textContent = "Não deu para enviar: " + error.message;
+        return;
+    }
+
+    avisoEntrar.textContent =
+        "Pronto. Mandamos um link para " + endereco + ". Abra o e-mail e clique nele — " +
+        "pode levar um minuto, e às vezes cai no spam.";
 });
 
 async function sair() {

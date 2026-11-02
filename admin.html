@@ -21,7 +21,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#1a4fa0">
 
-    <link rel="stylesheet" href="style.css?v=21">
+    <link rel="stylesheet" href="style.css?v=23">
 </head>
 
 <body class="pagina-admin">
@@ -47,10 +47,29 @@
             <h1>Painel de conteúdo</h1>
             <p class="admin-texto">
                 Aqui você escreve o título e a descrição de cada áudio, vídeo e texto do
-                site, e envia as imagens e os PDFs. Entre com a conta do Google que foi
-                cadastrada.
+                site, e envia as imagens e os PDFs.
             </p>
+
             <button class="botao botao-principal" id="botaoEntrar">Entrar com Google</button>
+
+            <!-- A segunda porta: serve para quem não tem conta do Google, e
+                 também para quando o Google implicar. A pessoa digita o
+                 e-mail e recebe um link para clicar. -->
+            <div class="admin-ou"><span>ou</span></div>
+
+            <form class="admin-por-email" id="formEmail">
+                <label class="admin-campo">
+                    <span class="admin-campo-titulo">Entrar por e-mail</span>
+                    <span class="admin-campo-ajuda">
+                        Funciona com qualquer e-mail. Você recebe um link e entra clicando nele.
+                    </span>
+                    <input type="email" id="campoEmail" placeholder="voce@exemplo.com" required>
+                </label>
+                <button class="botao botao-secundario" type="submit" id="botaoEmail">
+                    Receber o link
+                </button>
+            </form>
+
             <p class="admin-aviso" id="avisoEntrar"></p>
         </section>
 
@@ -87,7 +106,7 @@
          atualização dela não quebra o painel de surpresa. -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
     <script src="js/config.js?v=1"></script>
-    <script src="js/admin.js?v=7"></script>
+    <script src="js/admin.js?v=8"></script>
 </body>
 
 </html>
