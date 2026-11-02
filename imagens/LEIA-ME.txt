@@ -5,25 +5,38 @@ Aqui ficam as imagens da galeria (seção "Galeria de imagens", no final
 da página) e a imagem de prévia usada quando o link do site é
 compartilhado no WhatsApp, Facebook ou Telegram.
 
-A galeria tem hoje 61 espaços, nesta ordem:
+A galeria tem hoje 52 espaços, nesta ordem:
 
-  1) fotos das folhas dos códigos, com o texto escrito à mão (9)
-        7-min.jpg, 12-min.jpg, 13-min.jpg, 14-min.jpg, 19-min.jpg,
-        24-min.jpg, 25-min.jpg, 28-min.jpg, 29-min.jpg
-
-  2) a bandeira Wiphala (1)
+  1) a bandeira Wiphala (1)
         winphala.jpg
 
-  3) os desenhos do rolo, na pasta galeria/ (36)
+  2) os desenhos do rolo, na pasta galeria/ (36)
         galeria/desenho-01.jpg  até  galeria/desenho-36.jpg
 
-  4) 15 espaços reservados, ainda sem imagem
+  3) 15 espaços reservados, ainda sem imagem
         aparecem com um fundo azul escuro e uma estrela
 
 Saíram da galeria (os arquivos continuam aqui, caso queira voltar):
 
     yantra.jpg      (Yantra)
     portada.jpg     (Eka Tantra)
+
+    7-min.jpg, 12-min.jpg, 13-min.jpg, 14-min.jpg, 19-min.jpg,
+    24-min.jpg, 25-min.jpg, 28-min.jpg, 29-min.jpg
+        Eram fotos das folhas inteiras, com o desenho em cima e o texto
+        escrito à mão embaixo. Os nove desenhos se repetem entre os 36 do
+        rolo, nestes pares:
+
+            7-min  = desenho-32      24-min = desenho-03
+            12-min = desenho-25      25-min = desenho-04
+            13-min = desenho-24      28-min = desenho-05
+            14-min = desenho-23      29-min = desenho-06
+            19-min = desenho-18
+
+        ATENÇÃO: só estas nove fotos traziam o texto escrito à mão embaixo
+        do desenho. Os 36 do rolo são o desenho recortado, sem esse texto.
+        Se um dia quiser o texto de volta na galeria, é só recolocar a
+        linha <figure> da foto correspondente.
 
 Outras imagens desta pasta:
 
