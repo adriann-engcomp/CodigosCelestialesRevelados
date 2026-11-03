@@ -19,6 +19,9 @@
     --fonte-titulo: Georgia, "Times New Roman", serif;
     --fonte-texto: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --fonte-apoio: "Trebuchet MS", Verdana, Geneva, sans-serif;
+    --fonte-nota: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+    /* tons de letra usados para diferenciar um paragrafo do outro */
+    --texto-azulado: #d8e6ff;
 }
 
 * {
@@ -197,6 +200,12 @@ a {
     max-width: 980px;
     margin: 0 auto 42px;
     text-shadow: 0 1px 16px rgba(0, 0, 0, 0.3);
+    /* bordas retas dos dois lados; a ultima linha fica centralizada,
+       acompanhando o titulo. A separacao de silabas evita buracos. */
+    text-align: justify;
+    text-align-last: center;
+    -webkit-hyphens: auto;
+    hyphens: auto;
 }
 
 /* FRASES 2 e 3: cada uma ocupa metade da página. */
@@ -207,23 +216,31 @@ a {
     text-align: left;
 }
 
-/* As duas têm o mesmo tamanho de letra, mas fonte e tonalidade diferentes. */
+/* As duas sao um pouco maiores que antes e cada uma tem a sua propria
+   fonte, cor e entrelinha, para nao parecerem o mesmo paragrafo. */
 .capa-frase-2 {
     font-family: var(--fonte-texto);
-    font-size: 1rem;
+    font-size: 1.08rem;
+    line-height: 1.68;
+    letter-spacing: 0.1px;
     color: var(--dourado-suave);
 }
 
 .capa-frase-3 {
     font-family: var(--fonte-apoio);
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.06rem;
+    line-height: 1.74;
+    letter-spacing: 0.3px;
+    color: var(--texto-azulado);
 }
 
+/* a ultima linha da primeira tela: fonte serifada e dourado forte */
 .capa-nota {
     margin-top: 24px;
-    font-size: 0.95rem;
-    letter-spacing: 0.4px;
+    font-family: var(--fonte-nota);
+    font-size: 1.04rem;
+    font-style: italic;
+    letter-spacing: 0.6px;
     color: var(--dourado);
 }
 
@@ -1604,10 +1621,14 @@ input[name="_gotcha"] {
 
     .capa-frase-2,
     .capa-frase-3 {
-        font-size: 0.82rem;
-        line-height: 1.5;
+        font-size: 0.92rem;
+        line-height: 1.55;
         -webkit-hyphens: auto;
         hyphens: auto;
+    }
+
+    .capa-nota {
+        font-size: 0.96rem;
     }
 
     .grade-itens {
