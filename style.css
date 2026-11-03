@@ -21,7 +21,8 @@
     --fonte-apoio: "Trebuchet MS", Verdana, Geneva, sans-serif;
     --fonte-nota: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
     /* tons de letra usados para diferenciar um paragrafo do outro */
-    --texto-azulado: #d8e6ff;
+    --texto-azulado: #a6d2ff;
+    --texto-pessego: #f6c6a4;
 }
 
 * {
@@ -223,7 +224,7 @@ a {
     font-size: 1.08rem;
     line-height: 1.68;
     letter-spacing: 0.1px;
-    color: var(--dourado-suave);
+    color: var(--texto-pessego);
 }
 
 .capa-frase-3 {
