@@ -22,7 +22,7 @@
     --fonte-nota: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
     /* tons de letra usados para diferenciar um paragrafo do outro */
     --texto-azulado: #a6d2ff;
-    --texto-pessego: #f6c6a4;
+    --texto-lavanda: #d6c6fb;
 }
 
 * {
@@ -224,7 +224,7 @@ a {
     font-size: 1.08rem;
     line-height: 1.68;
     letter-spacing: 0.1px;
-    color: var(--texto-pessego);
+    color: var(--texto-lavanda);
 }
 
 .capa-frase-3 {

@@ -10,3 +10,5 @@ CHECKLIST-SEGUNDAS-ALTERACOES.md
 # scripts que geram a lista de conferência (uso interno)
 ferramentas/
 
+# configuracoes locais do Claude Code (nao fazem parte do site)
+.claude/
