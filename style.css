@@ -1786,6 +1786,15 @@ input[name="_gotcha"] {
     color: var(--texto-fraco);
 }
 
+/* Os dois jeitos de entrar ficam um debaixo do outro, com a mesma
+   largura: o do Google, o campo de e-mail e o botão do link. */
+#botaoEntrar {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
 .admin-entrar-email {
     display: flex;
     flex-direction: column;
@@ -1793,6 +1802,10 @@ input[name="_gotcha"] {
     max-width: 320px;
     margin: 0 auto;
     text-align: left;
+}
+
+.admin-entrar-email .botao {
+    width: 100%;
 }
 
 .admin-entrar-email input {
