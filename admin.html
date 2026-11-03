@@ -21,7 +21,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#1a4fa0">
 
-    <link rel="stylesheet" href="style.css?v=24">
+    <link rel="stylesheet" href="style.css?v=25">
 </head>
 
 <body class="pagina-admin">
@@ -47,10 +47,22 @@
             <h1>Painel de conteúdo</h1>
             <p class="admin-texto">
                 Aqui você escreve o título e a descrição de cada áudio, vídeo e texto do
-                site, e envia as imagens e os PDFs. Entre com a conta do Google que foi
-                cadastrada.
+                site, e envia as imagens e os PDFs. Entre com a conta que foi cadastrada.
             </p>
             <button class="botao botao-principal" id="botaoEntrar">Entrar com Google</button>
+
+            <!-- Quem não tem conta do Google entra por aqui: o Supabase manda
+                 um link para o e-mail e o clique nele abre o painel, sem senha.
+                 Isto NÃO dá permissão a ninguém: quem não está na tabela admins
+                 recebe o link, entra e vê a tela "conta sem permissão". -->
+            <p class="admin-ou">ou</p>
+
+            <form class="admin-entrar-email" id="formEmail">
+                <label class="admin-campo-titulo" for="campoEmail">Entrar com e-mail</label>
+                <input type="email" id="campoEmail" placeholder="seu@email.com" required autocomplete="email">
+                <button class="botao botao-secundario" type="submit" id="botaoEmail">Receber link de entrada</button>
+            </form>
+
             <p class="admin-aviso" id="avisoEntrar"></p>
         </section>
 
@@ -90,7 +102,7 @@
          atualização dela não quebra o painel de surpresa. -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
     <script src="js/config.js?v=1"></script>
-    <script src="js/admin.js?v=9"></script>
+    <script src="js/admin.js?v=10"></script>
 </body>
 
 </html>

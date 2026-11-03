@@ -22,6 +22,9 @@ const telaEntrar = document.getElementById("telaEntrar");
 const telaSemPermissao = document.getElementById("telaSemPermissao");
 const telaEditor = document.getElementById("telaEditor");
 const botaoEntrar = document.getElementById("botaoEntrar");
+const formEmail = document.getElementById("formEmail");
+const campoEmail = document.getElementById("campoEmail");
+const botaoEmail = document.getElementById("botaoEmail");
 const botaoSair = document.getElementById("botaoSair");
 const botaoSairOutra = document.getElementById("botaoSairOutra");
 const avisoEntrar = document.getElementById("avisoEntrar");
@@ -123,12 +126,21 @@ async function comecar() {
         mostrar("entrar");
     }
 
-    cliente.auth.onAuthStateChange((evento) => {
+    cliente.auth.onAuthStateChange(async (evento, sessao) => {
         if (evento === "SIGNED_OUT") {
             usuario = null;
             adminEmail.textContent = "";
             botaoSair.hidden = true;
             mostrar("entrar");
+            return;
+        }
+
+        /* Quem chegou pelo link do e-mail volta para cá com a sessão no
+           endereço, e a biblioteca só termina de lê-la depois que esta
+           página já perguntou pela sessão. Por isso o aviso vem por aqui.
+           O "se ainda não entrou" evita abrir o painel duas vezes. */
+        if (evento === "SIGNED_IN" && !usuario && sessao) {
+            await entrou(sessao.user);
         }
     });
 }
@@ -207,6 +219,39 @@ botaoEntrar.addEventListener("click", async () => {
     if (error) {
         avisoEntrar.textContent = "Não deu para entrar: " + error.message;
     }
+});
+
+/* Entrar sem conta do Google: o Supabase manda um link para o e-mail e
+   o clique no link traz a pessoa de volta já com a sessão aberta — não
+   existe senha para guardar nem para vazar.
+
+   Repare que isto é só a PORTA. Quem decide o que a pessoa pode fazer
+   continua sendo a tabela admins e as regras do banco: um e-mail que
+   não esteja lá entra e vê a tela "conta sem permissão". */
+formEmail.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = campoEmail.value.trim();
+    if (!email) return;
+
+    botaoEmail.disabled = true;
+    avisoEntrar.textContent = "Enviando o link…";
+
+    const { error } = await cliente.auth.signInWithOtp({
+        email: email,
+        options: { emailRedirectTo: window.location.href.split("?")[0] }
+    });
+
+    botaoEmail.disabled = false;
+
+    if (error) {
+        avisoEntrar.textContent = "Não deu para enviar: " + error.message;
+        return;
+    }
+
+    avisoEntrar.textContent =
+        "Pronto. Enviamos um link para " + email + ": abra a caixa de entrada e " +
+        "clique nele para entrar. Se não chegar em alguns minutos, veja o spam.";
 });
 
 async function sair() {

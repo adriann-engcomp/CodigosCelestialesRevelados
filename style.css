@@ -1776,6 +1776,41 @@ input[name="_gotcha"] {
     color: var(--dourado-suave);
 }
 
+/* ---- entrar com e-mail, para quem não tem conta do Google ---- */
+
+.admin-ou {
+    margin: 22px 0 16px;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--texto-fraco);
+}
+
+.admin-entrar-email {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 320px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.admin-entrar-email input {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid var(--borda);
+    border-radius: 2px;
+}
+
+.admin-entrar-email input:focus {
+    outline: none;
+    border-color: var(--dourado);
+}
+
 /* ---- as abas das três seções ---- */
 
 .admin-abas {
