@@ -20,9 +20,14 @@
     --fonte-texto: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --fonte-apoio: "Trebuchet MS", Verdana, Geneva, sans-serif;
     --fonte-nota: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
-    /* tons de letra usados para diferenciar um paragrafo do outro */
-    --texto-azulado: #a6d2ff;
-    --texto-lavanda: #d6c6fb;
+    /* o paragrafo da esquerda ganhou fonte com serifa, para nao parecer
+       o mesmo texto do paragrafo da direita, que e sem serifa */
+    --fonte-esquerda: "Palatino Linotype", "Book Antiqua", Palatino, "Times New Roman", serif;
+    /* Tons de letra usados para diferenciar um paragrafo do outro.
+       O da esquerda usa o mesmo amarelo do resto do site (--dourado) e
+       o da direita um azul mais cheio que o de antes. Os dois continuam
+       faceis de ler porque o fundo da primeira tela tambem escureceu. */
+    --texto-azulado: #8ec2f7;
 }
 
 * {
@@ -172,8 +177,11 @@ a {
     align-items: center;
     text-align: center;
     padding: 104px 20px 90px;
-    /* sem desenho inicial: só o azul do site */
-    background: var(--fundo);
+    /* O azul comeca mais fechado em cima e vai clareando ate o azul do
+       site; com isso os dois paragrafos podem ter tons mais escuros e
+       continuar faceis de ler. A emenda com a secao de baixo nao
+       aparece porque o fim do degrade e a mesma cor do site. */
+    background: linear-gradient(180deg, #123883 0%, #16458f 48%, var(--fundo) 100%);
 }
 
 .capa-conteudo {
@@ -195,18 +203,21 @@ a {
 /* FRASE 1: logo abaixo do título, centralizada, maior e mais realçada. */
 .capa-frase-1 {
     font-family: var(--fonte-titulo);
-    font-size: clamp(1.08rem, 2.1vw, 1.45rem);
-    line-height: 1.6;
+    font-size: clamp(1rem, 1.45vw, 1.22rem);
+    line-height: 1.72;
     color: #ffffff;
-    max-width: 980px;
-    margin: 0 auto 42px;
+    /* um pouco mais larga e com a letra um pouco menor: assim a frase
+       fecha em duas linhas e o fim dela nao fica solto embaixo */
+    max-width: var(--largura-max);
+    margin: 0 auto 40px;
     text-shadow: 0 1px 16px rgba(0, 0, 0, 0.3);
-    /* bordas retas dos dois lados; a ultima linha fica centralizada,
-       acompanhando o titulo. A separacao de silabas evita buracos. */
+    /* bordas retas dos dois lados e a ultima linha encostada na
+       esquerda, como foi pedido. Sem separacao de silabas: nenhuma
+       palavra e cortada com hifen no fim da linha. */
     text-align: justify;
-    text-align-last: center;
-    -webkit-hyphens: auto;
-    hyphens: auto;
+    text-align-last: left;
+    -webkit-hyphens: none;
+    hyphens: none;
 }
 
 /* FRASES 2 e 3: cada uma ocupa metade da página. */
@@ -220,11 +231,11 @@ a {
 /* As duas sao um pouco maiores que antes e cada uma tem a sua propria
    fonte, cor e entrelinha, para nao parecerem o mesmo paragrafo. */
 .capa-frase-2 {
-    font-family: var(--fonte-texto);
-    font-size: 1.08rem;
-    line-height: 1.68;
+    font-family: var(--fonte-esquerda);
+    font-size: 1.05rem;
+    line-height: 1.7;
     letter-spacing: 0.1px;
-    color: var(--texto-lavanda);
+    color: var(--dourado);
 }
 
 .capa-frase-3 {
@@ -235,14 +246,16 @@ a {
     color: var(--texto-azulado);
 }
 
-/* a ultima linha da primeira tela: fonte serifada e dourado forte */
+/* A ultima linha da primeira tela: fonte serifada, agora no mesmo
+   branco da frase de abertura. O amarelo dela foi para o paragrafo
+   da esquerda. */
 .capa-nota {
     margin-top: 24px;
     font-family: var(--fonte-nota);
     font-size: 1.04rem;
     font-style: italic;
     letter-spacing: 0.6px;
-    color: var(--dourado);
+    color: #ffffff;
 }
 
 /* ===== os dois retângulos deitados, em destaque, no fim da tela ===== */
@@ -1611,6 +1624,11 @@ input[name="_gotcha"] {
     .capa-frase-1 {
         font-size: 1.05rem;
         margin-bottom: 26px;
+        /* Na tela estreita a frase deixa de ser justificada: sem a
+           separacao de silabas, justificar abriria buracos grandes
+           entre as palavras. Alinhada a esquerda fica natural. */
+        text-align: left;
+        text-align-last: left;
     }
 
     /* Com a coluna estreita, a separação de sílabas evita os buracos
